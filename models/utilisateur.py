@@ -1,17 +1,18 @@
-class utilisateur(pseudo, mail, localisation, mail):
-    def __init__(self, pseudo, mail, localisation, evaluation):
+class Utilisateur:
+    def __init__(self, pseudo, mail, localisation, evaluation, est_pro:
         self.pseudo = pseudo
         self.mail = mail
         self.localisation = localisation
         self.evaluation = evaluation
+        self.est_pro = est_pro
+
     def se_connecter(self):
         print("Vous êtes connectés")
 
-class vendeur(utilisateur):
-    def __init__(self, pseudo, mail, localisation, evaluation):
-        super().__init__(pseudo, mail, localisation, evaluation)
+class Vendeur(Utilisateur):
+    pass
 
-class acheteur(utilisateur):
-    def __init__(self, pseudo, mail, localisation, evaluation):
-        super().__init__(pseudo, mail, localisation, evaluation)
+
+class Acheteur(Utilisateur):
+    pass
     
