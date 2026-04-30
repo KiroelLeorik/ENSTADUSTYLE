@@ -17,3 +17,6 @@ class Vetement(Article):
         self.couleur = couleur
         self.marque = marque
         self.genre = genre
+
+
+if __name__ == "__main__":
