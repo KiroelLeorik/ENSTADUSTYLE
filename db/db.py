@@ -36,8 +36,8 @@ def get_utilisateur_by_id(id):
 
 if __name__ == "__main__":
     print(get_all_articles())
+    print(get_all_utilisateurs())
     print(get_utilisateur_by_id(1))
-    print(get_all_articles())
     print(get_article_by_id(1))
 
 
