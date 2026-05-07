@@ -1,5 +1,33 @@
+import numpy as np
 
 
+def scorer_articles(articles, criteres):
+    n = len(criteres)
+    poids = np.array([1/n for i in range(n)])  # quels poids pour chaque critère ?
+    categorie = criteres.get('categorie')
+    sous_categorie = criteres.get('sous_categorie')
+    genre = criteres.get('genre')
+    taille = criteres.get('taille')
+    couleur = criteres.get('couleur')
+    marque = criteres.get('marque')
+    etat = criteres.get('etat')
+    prix = criteres.get('prix')
+    matiere = criteres.get('matiere')
+    resultats = []
+    if articles.vendu:
+        return 0
+    for a in articles:
+        scores = np.array([
+            1.0 if categorie is not None and a.categorie != categorie else 0.0, # critère 1
+            1.0 if sous_categorie is not None and a.sous_categorie != sous_categorie else 0.0,
+            if genre is not None and a.genre != genre else 0.0,
+            1.0 if sous_categorie is not None and a.sous_categorie != sous_categorie else 0.0,
+            1.0 if sous_categorie is not None and a.sous_categorie != sous_categorie else 0.0,
+            1.0 if sous_categorie is not None and a.sous_categorie != sous_categorie else 0.0,
+            1.0 if sous_categorie is not None and a.sous_categorie != sous_categorie else 0.0,
+        ])
+        score = np.dot(scores, poids)  # produit scalaire
+    return score
 def rechercher(articles, criteres):
     resultats = []
     categorie = criteres.get('categorie')
@@ -11,28 +39,28 @@ def rechercher(articles, criteres):
     etat = criteres.get('etat')
     prix = criteres.get('prix')
     matiere = criteres.get('matiere')
-    for article in articles:
+    for a in articles:
         check = True
-        if article.vendu:
+        if a.vendu:
             check = False
-        if categorie is not None and article.categorie != categorie:
+        if categorie is not None and a.categorie != categorie:
             check = False
-        if sous_categorie is not None and article.sous_categorie != sous_categorie:
+        if sous_categorie is not None and a.sous_categorie != sous_categorie:
             check = False
-        if genre is not None and article.genre != genre:
+        if genre is not None and a.genre != genre:
             check = False
-        if taille is not None and article.taille != taille:
+        if taille is not None and a.taille != taille:
             check = False
-        if couleur is not None and article.couleur != couleur:
+        if couleur is not None and a.couleur != couleur:
             check = False
-        if marque is not None and article.marque != marque:
+        if marque is not None and a.marque != marque:
             check = False
-        if etat is not None and article.etat != etat:
+        if etat is not None and a.etat != etat:
             check = False
-        if prix is not None and prix < article.prix_vendeur:
+        if prix is not None and prix < a.prix_vendeur:
             check = False
-        if matiere is not None and article.matiere != matiere:
+        if matiere is not None and a.matiere != matiere:
             check = False
         if check:
-            resultats.append(article)
+            resultats.append(a)
     return resultats
