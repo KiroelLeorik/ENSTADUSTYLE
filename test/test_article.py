@@ -1,5 +1,5 @@
 import unittest
-from models.objet import Article, Vetement
+from models.article import Article, Vetement
 
 
 class TestArticle(unittest.TestCase):
@@ -20,7 +20,7 @@ class TestArticle(unittest.TestCase):
             prix_vendeur=20.0, prix_min=15.0, id_vendeur=2,
             date_publication="2026-04-12", photo="robe.jpg", matiere="Coton"
         )
-
+        self.
     # --- Test 1 : Création d'un article ---
     def test_creation_nom(self):
         """Vérifie que le nom est bien assigné"""
