@@ -2,32 +2,47 @@ import numpy as np
 
 
 def scorer_articles(articles, criteres):
-    n = len(criteres)
-    poids = np.array([1/n for i in range(n)])  # quels poids pour chaque critère ?
-    categorie = criteres.get('categorie')
-    sous_categorie = criteres.get('sous_categorie')
-    genre = criteres.get('genre')
-    taille = criteres.get('taille')
-    couleur = criteres.get('couleur')
-    marque = criteres.get('marque')
-    etat = criteres.get('etat')
-    prix = criteres.get('prix')
-    matiere = criteres.get('matiere')
-    resultats = []
-    if articles.vendu:
-        return 0
-    for a in articles:
-        scores = np.array([
-            1.0 if categorie is not None and a.categorie != categorie else 0.0, # critère 1
-            1.0 if sous_categorie is not None and a.sous_categorie != sous_categorie else 0.0,
-            if genre is not None and a.genre != genre else 0.0,
-            1.0 if sous_categorie is not None and a.sous_categorie != sous_categorie else 0.0,
-            1.0 if sous_categorie is not None and a.sous_categorie != sous_categorie else 0.0,
-            1.0 if sous_categorie is not None and a.sous_categorie != sous_categorie else 0.0,
-            1.0 if sous_categorie is not None and a.sous_categorie != sous_categorie else 0.0,
-        ])
-        score = np.dot(scores, poids)  # produit scalaire
-    return score
+    #INIT
+    resultat = []
+    mapping = {
+        "categorie": "categorie",
+        "sous_categorie": "sous_categorie",
+        "genre": "genre",
+        "taille": "taille",
+        "couleur": "couleur",
+        "marque": "marque",
+        "etat": "etat",
+        "matiere": "matiere",
+    }
+    criteres_actifs = {k : v for k, v in criteres.items() if k in mapping}
+    if not criteres_actifs:
+        return articles
+
+    articles_dispo = [a for a in articles if not a.vendu]
+    cles = list(criteres_actifs)
+    n = len(cles)
+    poid = np.array([1/n] * n)
+    matrice = []
+
+    for a in articles_dispo:
+        ligne = []
+        for cle in cles:
+            if getattr(a, cle) == criteres_actifs[cle]:
+                ligne.append(1.0)
+            else:
+                ligne.append(0.0)
+        matrice.append(ligne)
+
+    matrice = np.array(matrice)
+    scores = matrice @ poid
+
+    return resultat
+
+
+"""---------------------- OLD ------------------------------------------
+Version lente qui ne sort pas une liste triée en fonction du score mais qui sort seulement les articles qui correspondent exactement aux
+critères.
+La version calcul matriciel ci-dessous est plus rapide et permet de trier les résultats en fonction du score obtenu.
 def rechercher(articles, criteres):
     resultats = []
     categorie = criteres.get('categorie')
@@ -64,3 +79,4 @@ def rechercher(articles, criteres):
         if check:
             resultats.append(a)
     return resultats
+"""
