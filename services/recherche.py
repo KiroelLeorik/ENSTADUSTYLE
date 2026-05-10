@@ -2,8 +2,6 @@ import numpy as np
 
 
 def scorer_articles(articles, criteres):
-    #INIT
-    resultat = []
     mapping = {
         "categorie": "categorie",
         "sous_categorie": "sous_categorie",
@@ -35,14 +33,15 @@ def scorer_articles(articles, criteres):
 
     matrice = np.array(matrice)
     scores = matrice @ poid
-
+    resultat = list(zip(articles_dispo, scores))
+    resultat.sort(key=lambda x: x[1], reverse=True)
     return resultat
 
 
 """---------------------- OLD ------------------------------------------
 Version lente qui ne sort pas une liste triée en fonction du score mais qui sort seulement les articles qui correspondent exactement aux
 critères.
-La version calcul matriciel ci-dessous est plus rapide et permet de trier les résultats en fonction du score obtenu.
+La version calcul matriciel ci-dessous est plus rapide et permet de trier les résultats en fonction du score obtenu."""
 def rechercher(articles, criteres):
     resultats = []
     categorie = criteres.get('categorie')
@@ -79,4 +78,35 @@ def rechercher(articles, criteres):
         if check:
             resultats.append(a)
     return resultats
-"""
+
+def scorer_articles_python(articles, criteres): #coder par l'IA
+    mapping = {
+        "categorie": "categorie",
+        "sous_categorie": "sous_categorie",
+        "genre": "genre",
+        "taille": "taille",
+        "couleur": "couleur",
+        "marque": "marque",
+        "etat": "etat",
+        "matiere": "matiere",
+    }
+    criteres_actifs = {k: v for k, v in criteres.items() if k in mapping}
+    if not criteres_actifs:
+        return articles
+
+    cles = list(criteres_actifs)
+    n = len(cles)
+    resultats = []
+
+    for a in articles:
+        if a.vendu:
+            continue
+        matchs = 0
+        for cle in cles:
+            if getattr(a, cle) == criteres_actifs[cle]:
+                matchs += 1
+        score = matchs / n
+        resultats.append((a, score))
+
+    resultats.sort(key=lambda x: x[1], reverse=True)
+    return resultats

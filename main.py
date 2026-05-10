@@ -4,7 +4,7 @@ from models.utilisateur import Acheteur, Vendeur, Utilisateur
 from models.transaction import Transaction
 from models.article import Article, Vetement
 from db.db import *
-from services.recherche import rechercher
+from services.recherche import rechercher, scorer_articles
 from services.matching import proposer_achat
 
 
@@ -13,12 +13,18 @@ if __name__ == '__main__':
     articles = get_all_articles()
     users = [Utilisateur(*u) for u in utilisateurs]
     vetements = [Vetement(*a) for a in articles]
-
     criteres = {'sous_categorie' : 'Vestes'}
     resultats = rechercher(vetements, criteres)
 
-    for resultat in resultats:
-        print(resultat.nom, resultat.prix_vendeur)
-    if resultats:
-        statut = proposer_achat(None, resultats[0], prix_acheteur=30)
-        print(statut)
+    #for resultat in resultats:
+        #print(resultat.nom, resultat.prix_vendeur)
+    #if resultats:
+        #statut = proposer_achat(None, resultats[0], prix_acheteur=30)
+        #print(statut)
+
+    criteres = {"sous_categorie": "Vestes", "couleur": "Bleu", "taille": "M"}
+
+    resultats = scorer_articles(vetements, criteres)
+
+    for article, score in resultats:
+        print(f"{article.nom} — score: {score:.2f}")
