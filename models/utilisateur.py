@@ -1,3 +1,6 @@
+from models import article
+
+
 class Utilisateur:
     def __init__(self, id, pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation, date_inscription):
         self.id = id
@@ -48,24 +51,57 @@ class Utilisateur:
     # Retourne un résumé de l'utilisateur
 
 class Vendeur(Utilisateur):
+    def __init__(self, id, pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation, date_inscription):
+        super().__init__(id, pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation, date_inscription)
+        self.liste_article = []
+
     def mettre_en_vente(self, article):
-    # Ajoute un article à sa liste d'articles en vente
+        if article.vendu:
+            print("L'article est déjà vendu !")
+            return False
+        self.liste_article.append(article)
+        return True
 
     def retirer_article(self, article):
-
+        if article in self.liste_article:
+            self.liste_article.remove(article)
+            return True
+        else:
+            print("Cet article n'existe pas")
+            return False
     # Retire un article de la vente
 
-    def mes_articles(self, tous_les_articles):
-
-
-# Retourne ses articles depuis la liste globale
+    def mes_articles(self):
+        article_vendu = []
+        article_en_vente = []
+        for a in self.liste_article:
+            if a.vendu and a not in article_vendu:
+                article_vendu.append(a)
+            elif not a.vendu and a not in article_en_vente:
+                article_en_vente.append(a)
+        return article_vendu, article_en_vente
 
 
 class Acheteur(Utilisateur):
-    def faire_offre(self, article, prix_propose, marge_max=0.1):
+    def __init__(self, ...):
+        super().__init__(...)
+        self.favoris = []  # composition — liste d'articles favoris
 
-    # Utilise proposer_achat() et retourne le résultat
+    def faire_offre(self, article, prix_propose, marge_max=0.1):
+        # Utilise proposer_achat() de matching.py
+        # Retourne le statut
+        ...
 
     def rechercher_articles(self, articles, criteres):
-# Utilise rechercher() et retourne les résultats
+        # Utilise rechercher() de recherche.py
+        # Retourne les résultats
+        ...
+
+    def ajouter_favori(self, article):
+        # Ajoute un article à self.favoris
+        ...
+
+    def retirer_favori(self, article):
+        # Retire un article de self.favoris
+        ...
     
