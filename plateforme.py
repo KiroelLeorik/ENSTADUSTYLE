@@ -62,3 +62,21 @@ class Plateforme:
                 print(f"{a.nom} — {a.prix_vendeur}€ ({a.sous_categorie})")
             else:
                 print(f"{a.nom} — {a.prix_vendeur}€ ({a.sous_categorie}) — Vendu")
+    #Je me suis rendu compte qu'on utilisait que des utilisateurs mais qu'on avait besoin d'acheteur et de vendeur
+    #Le problème c'est que tout le monde est à la fois acheteur et vendeur, mais on ne peut pas instancier
+    #Un utilisateur, vendeur, acheteur sous la même bannière
+    #Donc on charge tout le monde en utilisateur, puis on les transforment en acheteur/vendeur au bon moment
+    def en_tant_que_acheteur(self, utilisateur):
+        from models.utilisateur import Acheteur
+        return Acheteur(utilisateur.id, utilisateur.pseudo, utilisateur.nom,
+                        utilisateur.prenom, utilisateur.mail, utilisateur.mot_de_passe,
+                        utilisateur.est_pro, utilisateur.evaluation,
+                        utilisateur.localisation, utilisateur.date_inscription)
+
+    def en_tant_que_vendeur(self, utilisateur):
+        from models.utilisateur import Vendeur
+        return Vendeur(utilisateur.id, utilisateur.pseudo, utilisateur.nom,
+                       utilisateur.prenom, utilisateur.mail, utilisateur.mot_de_passe,
+                       utilisateur.est_pro, utilisateur.evaluation,
+                       utilisateur.localisation, utilisateur.date_inscription)
+

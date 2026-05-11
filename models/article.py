@@ -1,26 +1,24 @@
 class Article:
     def __init__(self, id, nom, description, categorie, sous_categorie, genre, taille, couleur, marque, etat, prix_vendeur, prix_min, id_vendeur, date_publication, photo, matiere):
-            """
-    
-    :param self: 
-    :param id: 
-    :param nom: 
-    :param description: 
-    :param categorie: 
-    :param sous_categorie: 
-    :param genre: 
-    :param taille: 
-    :param couleur: 
-    :param marque: 
-    :param etat: 
-    :param prix_vendeur: 
-    :param prix_min: 
-    :param id_vendeur: 
-    :param date_publication: 
-    :param photo: 
-    :param matiere: 
-    :return: 
-    """
+        """
+
+        :param id:
+        :param nom:
+        :param description:
+        :param categorie:
+        :param sous_categorie:
+        :param genre:
+        :param taille:
+        :param couleur:
+        :param marque:
+        :param etat:
+        :param prix_vendeur:
+        :param prix_min:
+        :param id_vendeur:
+        :param date_publication:
+        :param photo:
+        :param matiere:
+        """
         self.id = id
         self.nom = nom
         self.description = description
@@ -39,40 +37,40 @@ class Article:
         self.vendu = False
         self.matiere = matiere
     def est_disponible(self):
-            """
+        """
     
-    :param self: 
-    :return: 
-    """
+        :param self:
+        :return:
+        """
         return not self.vendu
 
 class Vetement(Article):
     def __init__(self, id, nom, description, categorie, sous_categorie, genre, taille, couleur, marque, etat, prix_vendeur, prix_min, id_vendeur, date_publication, photo, matiere):
-                """
-        
-        :param id: 
-        :param nom: 
-        :param description: 
-        :param categorie: 
-        :param sous_categorie: 
-        :param genre: 
-        :param taille: 
-        :param couleur: 
-        :param marque: 
-        :param etat: 
-        :param prix_vendeur: 
-        :param prix_min: 
-        :param id_vendeur: 
-        :param date_publication: 
-        :param photo: 
-        :param matiere: 
+        """
+
+        :param id:
+        :param nom:
+        :param description:
+        :param categorie:
+        :param sous_categorie:
+        :param genre:
+        :param taille:
+        :param couleur:
+        :param marque:
+        :param etat:
+        :param prix_vendeur:
+        :param prix_min:
+        :param id_vendeur:
+        :param date_publication:
+        :param photo:
+        :param matiere:
         """
         super().__init__(id, nom, description, categorie, sous_categorie, genre, taille, couleur, marque, etat, prix_vendeur, prix_min, id_vendeur, date_publication, photo, matiere)
         def get_details(self):
-                        """
-            
-            :param self: 
-            :return: 
+            """
+
+            :param self:
+            :return:
             """
             return [self.marque, self.taille, self.couleur, self.matiere]
 

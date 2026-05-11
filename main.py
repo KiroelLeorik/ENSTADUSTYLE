@@ -1,30 +1,24 @@
-# Press Maj+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-from models.utilisateur import Acheteur, Vendeur, Utilisateur
-from models.transaction import Transaction
-from models.article import Article, Vetement
-from db.db import *
-from services.recherche import rechercher, scorer_articles
-from services.matching import proposer_achat
-
+from plateforme import Plateforme
 
 if __name__ == '__main__':
-    utilisateurs = get_all_utilisateurs()
-    articles = get_all_articles()
-    users = [Utilisateur(*u) for u in utilisateurs]
-    vetements = [Vetement(*a) for a in articles]
-    criteres = {'sous_categorie' : 'Vestes'}
-    resultats = rechercher(vetements, criteres)
-
-    #for resultat in resultats:
-        #print(resultat.nom, resultat.prix_vendeur)
-    #if resultats:
-        #statut = proposer_achat(None, resultats[0], prix_acheteur=30)
-        #print(statut)
+    #Etape 1 : Initialisation de la plateforme
+    p = Plateforme()
+    p.charger_depuis_bdd()
+    p.afficher_catalogue()
+    #Etape 2 : connexion d'un utilisateur
+    alice = p.trouver_utilisateur("alice92")
+    alice.se_connecter("alice92", "hash1")
 
     criteres = {"sous_categorie": "Vestes", "couleur": "Bleu", "taille": "M"}
 
-    resultats = scorer_articles(vetements, criteres)
-
+    alice = p.trouver_utilisateur("alice92")
+    alice_acheteur = p.en_tant_que_acheteur(alice)
+    resultats = alice_acheteur.rechercher_articles(p.articles, criteres)
     for article, score in resultats:
         print(f"{article.nom} — score: {score:.2f}")
+    # Bob veut vendre
+    bob = p.trouver_utilisateur("bob_style")
+    bob_vendeur = p.en_tant_que_vendeur(bob)
+    article = p.articles[0]
+    bob_vendeur.mettre_en_vente(article)
+
