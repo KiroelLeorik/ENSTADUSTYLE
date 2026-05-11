@@ -23,12 +23,14 @@ class Plateforme:
                 print('blabla')
                 return False
         from models.utilisateur import Utilisateur
-        nouveau_id = len(self.utilisateurs) + 1
-        self.utilisateurs.append(Utilisateur(nouveau_id, pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation, date_inscription))
+        from db.db import insert_utilisateur
+        #Créer la variable new_id met à jour la BDD
+        new_id = insert_utilisateur(pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation)
+        new_user = Utilisateur(new_id, pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation,
+                 date_inscription)
+        self.utilisateurs.append(new_user)
         return True
-        # Crée un nouvel utilisateur
-        # Vérifie que le pseudo n'est pas déjà pris
-        # Ajoute à self.utilisateurs
+
 
 
     def charger_depuis_bdd(self):
@@ -75,8 +77,15 @@ class Plateforme:
 
     def en_tant_que_vendeur(self, utilisateur):
         from models.utilisateur import Vendeur
-        return Vendeur(utilisateur.id, utilisateur.pseudo, utilisateur.nom,
-                       utilisateur.prenom, utilisateur.mail, utilisateur.mot_de_passe,
-                       utilisateur.est_pro, utilisateur.evaluation,
-                       utilisateur.localisation, utilisateur.date_inscription)
+        vendeur = Vendeur(utilisateur.id, utilisateur.pseudo, utilisateur.nom,
+                          utilisateur.prenom, utilisateur.mail, utilisateur.mot_de_passe,
+                          utilisateur.est_pro, utilisateur.evaluation,
+                          utilisateur.localisation, utilisateur.date_inscription)
+
+        # Charger ses articles existants
+        for article in self.articles:
+            if article.id_vendeur == utilisateur.id:
+                vendeur.liste_article.append(article)
+
+        return vendeur
 

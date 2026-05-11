@@ -1,20 +1,20 @@
+from db.db import *
 
-def proposer_achat(acheteur, article, prix_acheteur, marge_max=0.1):
-                """
-            
-            :param acheteur: 
-            :param article: 
-            :param prix_acheteur: 
-            :param marge_max: 
-            :return: 
-            """
+def proposer_achat(acheteur, article, prix_acheteur):
     prix_min = article.prix_min
     prix_vendeur = article.prix_vendeur
-    budget_elargi = prix_acheteur * (1 + marge_max)
 
     if prix_acheteur >= prix_vendeur:
-        return 2 #acceptée
-    elif prix_acheteur >= prix_min and prix_vendeur <= budget_elargi:
-        return 1 #Négociation
+        statut = "acceptee"
+        prix_final = prix_acheteur
+        article.vendu = True
+        update_article_vendu(article.id)
+    elif prix_acheteur >= prix_min:
+        statut = "negociation"
+        prix_final = None
     else:
-        return 0 #refusée
+        statut = "refusee"
+        prix_final = None
+
+    insert_transaction(acheteur.id, article.id_vendeur, article.id, prix_acheteur, prix_final, statut)
+    return statut

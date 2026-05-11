@@ -68,13 +68,19 @@ class Vendeur(Utilisateur):
     def __init__(self, id, pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation, date_inscription):
         super().__init__(id, pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation, date_inscription)
         self.liste_article = []
-
+#persistance BDD OK
     def mettre_en_vente(self, article):
         if article.vendu:
             print("L'article est déjà vendu !")
             return False
-        self.liste_article.append(article)
-        return True
+        elif article in self.liste_article:
+            print("L'article est déjà en vente !")
+            return False
+        else:
+            self.liste_article.append(article)
+            from db.db import insert_article
+            insert_article(article.nom, article.description, article.categorie, article.sous_categorie, article.genre, article.taille, article.couleur, article.marque, article.etat, article.prix_vendeur, article.prix_min, article.id_vendeur, article.photo, article.matiere)
+            return True
 
     def retirer_article(self, article):
         if article in self.liste_article:
@@ -101,11 +107,11 @@ class Acheteur(Utilisateur):
         super().__init__(id, pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation, date_inscription)
         self.favoris = []  # composition — liste d'articles favoris
 
-    def faire_offre(self, article, prix_propose, marge_max=0.1):
+    def faire_offre(self, article, prix_propose):
         # Utilise proposer_achat() de matching.py
         # Persistance BDD
         from services.matching import proposer_achat
-        return proposer_achat(self, article, prix_propose, marge_max)
+        return proposer_achat(self, article, prix_propose)
 
     def rechercher_articles(self, articles, criteres):
         from services.recherche import scorer_articles

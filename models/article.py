@@ -1,5 +1,5 @@
 class Article:
-    def __init__(self, id, nom, description, categorie, sous_categorie, genre, taille, couleur, marque, etat, prix_vendeur, prix_min, id_vendeur, date_publication, photo, matiere):
+    def __init__(self, id, nom, description, categorie, sous_categorie, genre, taille, couleur, marque, etat, prix_vendeur, prix_min, id_vendeur, date_publication, photo, matiere, vendu):
         """
 
         :param id:
@@ -34,7 +34,7 @@ class Article:
         self.id_vendeur = id_vendeur
         self.date_publication = date_publication
         self.photo = photo
-        self.vendu = False
+        self.vendu = vendu
         self.matiere = matiere
     def est_disponible(self):
         """
@@ -45,7 +45,7 @@ class Article:
         return not self.vendu
 
 class Vetement(Article):
-    def __init__(self, id, nom, description, categorie, sous_categorie, genre, taille, couleur, marque, etat, prix_vendeur, prix_min, id_vendeur, date_publication, photo, matiere):
+    def __init__(self, id, nom, description, categorie, sous_categorie, genre, taille, couleur, marque, etat, prix_vendeur, prix_min, id_vendeur, date_publication, photo, matiere, vendu):
         """
 
         :param id:
@@ -65,7 +65,7 @@ class Vetement(Article):
         :param photo:
         :param matiere:
         """
-        super().__init__(id, nom, description, categorie, sous_categorie, genre, taille, couleur, marque, etat, prix_vendeur, prix_min, id_vendeur, date_publication, photo, matiere)
+        super().__init__(id, nom, description, categorie, sous_categorie, genre, taille, couleur, marque, etat, prix_vendeur, prix_min, id_vendeur, date_publication, photo, matiere, vendu)
         def get_details(self):
             """
 

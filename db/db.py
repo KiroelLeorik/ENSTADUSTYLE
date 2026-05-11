@@ -55,6 +55,39 @@ def get_utilisateur_by_id(id):
     resultat = c.fetchone()
     conn.close()
     return resultat
+#persistance BDD
+def insert_utilisateur(pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation):
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('''
+            INSERT INTO Utilisateurs (pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ''', (pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation))
+    new_id = c.lastrowid  # récupère l'id généré par SQLite
+    conn.commit()
+    conn.close()
+    return new_id
+
+def insert_article(nom, description, categorie, sous_categorie, genre, taille, couleur, marque, etat, prix_vendeur, prix_min, id_vendeur, photo, matiere):
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('INSERT INTO Objets (nom, description, categorie, sous_categorie, genre, taille, couleur, marque, etat, prix_vendeur, prix_min, id_vendeur, photo, matiere) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+              (nom, description, categorie, sous_categorie, genre, taille, couleur, marque, etat, prix_vendeur, prix_min, id_vendeur, photo, matiere))
+    conn.commit()
+    conn.close()
+    #Remarque, pas besoin de date_de_publication car il y a un timestamp d'autoincrémenter
+def update_article_vendu(id_objet):
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('UPDATE Objets SET vendu = 1 WHERE id_objet = ?', (id_objet,))
+    conn.commit()
+    conn.close()
+def insert_transaction(id_acheteur, id_vendeur, id_objet, prix_propose, prix_final, statut):
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('INSERT INTO Transactions (id_acheteur, id_vendeur, id_objet, prix_propose, prix_final, statut) VALUES (?, ?, ?, ?, ?, ?)', (id_acheteur, id_vendeur, id_objet, prix_propose, prix_final, statut))
+    conn.commit()
+    conn.close()
 
 if __name__ == "__main__":
     print(get_all_articles())
