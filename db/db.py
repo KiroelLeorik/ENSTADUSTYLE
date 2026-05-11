@@ -2,10 +2,18 @@ import sqlite3
 import os
 
 def get_connection():
+        """
+    
+    :return: 
+    """
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     conn = sqlite3.connect(os.path.join(BASE_DIR, "../db/marche.db"))
     return conn
 def get_all_articles():
+        """
+    
+    :return: 
+    """
     conn = get_connection()
     c = conn.cursor()
     c.execute('SELECT * FROM Objets')
@@ -13,6 +21,11 @@ def get_all_articles():
     conn.close()
     return resultat
 def get_article_by_id(id):
+        """
+    
+    :param id: 
+    :return: 
+    """
     conn = get_connection()
     c = conn.cursor()
     c.execute('SELECT * FROM Objets WHERE id_objet = ?', (id,))
@@ -20,6 +33,10 @@ def get_article_by_id(id):
     conn.close()
     return resultat
 def get_all_utilisateurs():
+        """
+    
+    :return: 
+    """
     conn = get_connection()
     c = conn.cursor()
     c.execute('SELECT * FROM Utilisateurs')
@@ -27,6 +44,11 @@ def get_all_utilisateurs():
     conn.close()
     return resultat
 def get_utilisateur_by_id(id):
+        """
+    
+    :param id: 
+    :return: 
+    """
     conn = get_connection()
     c = conn.cursor()
     c.execute('SELECT * FROM Utilisateurs WHERE id_utilisateur = ?', (id,))

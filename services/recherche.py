@@ -1,7 +1,13 @@
 import numpy as np
 
-
-def scorer_articles(articles, criteres):
+#score=[(catégorie,0.5),(sous_catégorie,0.4),(genre,0.1),(taille,0.3),(couleur,0.2),(etat,0.4),(matiere,0.2)]
+def scorer_articles(articles, criteres): 
+            """
+    
+    :param articles: 
+    :param criteres: 
+    :return: 
+    """
     mapping = {
         "categorie": "categorie",
         "sous_categorie": "sous_categorie",
@@ -15,10 +21,17 @@ def scorer_articles(articles, criteres):
     criteres_actifs = {k : v for k, v in criteres.items() if k in mapping}
     if not criteres_actifs:
         return articles
-
     articles_dispo = [a for a in articles if not a.vendu]
     cles = list(criteres_actifs)
     n = len(cles)
+    #poidprim=np.array([0]*n)
+    #for c in range(n):
+    #    for i in range(len (score)):
+    #        if score[i][0]==cles[c]:
+    #           poidprim[c]=score[i][1]
+    #for p in poidprim:
+    #        if p==0:
+    #                   poidprim.remove(p)
     poid = np.array([1/n] * n)
     matrice = []
 
@@ -43,6 +56,12 @@ Version lente qui ne sort pas une liste triée en fonction du score mais qui sor
 critères.
 La version calcul matriciel ci-dessous est plus rapide et permet de trier les résultats en fonction du score obtenu."""
 def rechercher(articles, criteres):
+            """
+        
+        :param articles: 
+        :param criteres: 
+        :return: 
+        """
     resultats = []
     categorie = criteres.get('categorie')
     sous_categorie = criteres.get('sous_categorie')
@@ -79,7 +98,13 @@ def rechercher(articles, criteres):
             resultats.append(a)
     return resultats
 
-def scorer_articles_python(articles, criteres): #coder par l'IA
+def scorer_articles_python(articles, criteres): 
+            """
+        
+        :param articles: 
+        :param criteres: 
+        :return: 
+        """                                        #coder par l'IA
     mapping = {
         "categorie": "categorie",
         "sous_categorie": "sous_categorie",
