@@ -1,5 +1,5 @@
 from plateforme import Plateforme
-
+#test
 if __name__ == '__main__':
     #Etape 1 : Initialisation de la plateforme
     p = Plateforme()
