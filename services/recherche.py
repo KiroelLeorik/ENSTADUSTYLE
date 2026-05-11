@@ -2,11 +2,11 @@ import numpy as np
 
 #score=[(catégorie,0.5),(sous_catégorie,0.4),(genre,0.1),(taille,0.3),(couleur,0.2),(etat,0.4),(matiere,0.2)]
 def scorer_articles(articles, criteres): 
-            """
-    
-    :param articles: 
-    :param criteres: 
-    :return: 
+    """
+
+    :param articles:
+    :param criteres:
+    :return:
     """
     mapping = {
         "categorie": "categorie",
@@ -55,13 +55,15 @@ def scorer_articles(articles, criteres):
 Version lente qui ne sort pas une liste triée en fonction du score mais qui sort seulement les articles qui correspondent exactement aux
 critères.
 La version calcul matriciel ci-dessous est plus rapide et permet de trier les résultats en fonction du score obtenu."""
+
+
 def rechercher(articles, criteres):
-            """
-        
-        :param articles: 
-        :param criteres: 
-        :return: 
-        """
+    """
+
+    :param articles:
+    :param criteres:
+    :return:
+    """
     resultats = []
     categorie = criteres.get('categorie')
     sous_categorie = criteres.get('sous_categorie')
@@ -98,13 +100,13 @@ def rechercher(articles, criteres):
             resultats.append(a)
     return resultats
 
-def scorer_articles_python(articles, criteres): 
-            """
-        
-        :param articles: 
-        :param criteres: 
-        :return: 
-        """                                        #coder par l'IA
+def scorer_articles_python(articles, criteres):
+    """
+
+    :param articles:
+    :param criteres:
+    :return:
+    """
     mapping = {
         "categorie": "categorie",
         "sous_categorie": "sous_categorie",
