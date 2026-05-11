@@ -29,6 +29,9 @@ def scorer_articles(articles, criteres):
     #    for i in range(len (score)):
     #        if score[i][0]==cles[c]:
     #           poidprim[c]=score[i][1]
+    #for p in poidprim:
+    #        if p==0:
+    #                   poidprim.remove(p)
     poid = np.array([1/n] * n)
     matrice = []
 
