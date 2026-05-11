@@ -5,8 +5,8 @@ def proposer_achat(acheteur, article, prix_acheteur, marge_max=0.1):
     budget_elargi = prix_acheteur * (1 + marge_max)
 
     if prix_acheteur >= prix_vendeur:
-        return "acceptee"
+        return 2 #acceptée
     elif prix_acheteur >= prix_min and prix_vendeur <= budget_elargi:
-        return "negociation"
+        return 1 #Négociation
     else:
-        return "refusee"
+        return 0 #refusée
