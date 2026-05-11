@@ -1,6 +1,6 @@
 import numpy as np
 
-
+#score=[(catégorie,0.5),(sous_catégorie,0.4),(genre,0.1),(taille,0.3),(couleur,0.2),(etat,0.4),(matiere,0.2)]
 def scorer_articles(articles, criteres):
     mapping = {
         "categorie": "categorie",
@@ -19,6 +19,11 @@ def scorer_articles(articles, criteres):
     articles_dispo = [a for a in articles if not a.vendu]
     cles = list(criteres_actifs)
     n = len(cles)
+    #poidprim=np.array([0]*n)
+    #for c in range(n):
+    #    for i in range(len (score)):
+    #        if score[i][0]==cles[c]:
+    #           poidprim[c]=score[i][1]
     poid = np.array([1/n] * n)
     matrice = []
 
