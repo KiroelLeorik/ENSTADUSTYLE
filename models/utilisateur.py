@@ -29,6 +29,7 @@ class Utilisateur:
             return False
         self.mot_de_passe = nouveau_mdp
         return True
+    # Incomplet, manque la persistance BDD
 
     def se_connecter(self, pseudo, mdp):
         if pseudo != self.pseudo:
@@ -59,7 +60,7 @@ class Utilisateur:
             print("Aucune modification effectuée.")
             return False
         return True
-    #Incomplet, il faut modifier la DB
+    #Incomplet, manque la persistance BDD
 
     def afficher_profil(self):
         return(self.pseudo, self.mail, self.localisation)
@@ -90,7 +91,7 @@ class Vendeur(Utilisateur):
             print("Cet article n'existe pas")
             return False
     # Retire un article de la vente
-    # persistance BDD
+    #Incomplet, manque la persistance BDD
     def mes_articles(self):
         article_vendu = []
         article_en_vente = []
@@ -109,7 +110,7 @@ class Acheteur(Utilisateur):
 
     def faire_offre(self, article, prix_propose):
         # Utilise proposer_achat() de matching.py
-        # Persistance BDD
+        # Persistance BDD OK
         from services.matching import proposer_achat
         return proposer_achat(self, article, prix_propose)
 
@@ -124,6 +125,7 @@ class Acheteur(Utilisateur):
         else:
             print("L'article est déjà dans vos favoris !")
             return False
+        # Incomplet, manque la persistance BDD
 
     def retirer_favori(self, article):
         if article in self.favoris: #Faire un onglet favoris dans la BDD
@@ -132,5 +134,6 @@ class Acheteur(Utilisateur):
         else:
             print("L'article n'est pas dans vos favoris !")
             return False
+        # Incomplet, manque la persistance BDD
 
     

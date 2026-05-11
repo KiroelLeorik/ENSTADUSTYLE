@@ -1,0 +1,8 @@
+Manque quelques persistances BDD
+
+Réorganiser les persistances BDD pour éviter de les disséminer dans le code (Focus dans models
+pour les actions user ou dans plateforme pour les actions admin, pas dans matching).
+
+Une fonction inutile "ajouter_article" dans plateforme.
+
+Créer une hierarchie admin (plateforme), user (utilisateur).

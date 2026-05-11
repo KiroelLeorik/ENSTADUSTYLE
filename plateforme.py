@@ -52,7 +52,7 @@ class Plateforme:
                 return user
         return None
 
-    def ajouter_article(self, article):
+    def ajouter_article(self, article): #Fonction inutile car déjà dans models vendeur ?
         if article not in self.articles:
             self.articles.append(article)
             return True
