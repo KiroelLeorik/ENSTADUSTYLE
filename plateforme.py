@@ -1,3 +1,4 @@
+
 class Plateforme:
     def __init__(self):
         self.utilisateurs = []    # composition
