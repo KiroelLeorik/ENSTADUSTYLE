@@ -2,7 +2,7 @@ import numpy as np
 
 #score=[(catégorie,0.5),(sous_catégorie,0.4),(genre,0.1),(taille,0.3),(couleur,0.2),(etat,0.4),(matiere,0.2)]
 def scorer_articles(articles, criteres): 
-        """
+            """
     
     :param articles: 
     :param criteres: 
@@ -21,7 +21,6 @@ def scorer_articles(articles, criteres):
     criteres_actifs = {k : v for k, v in criteres.items() if k in mapping}
     if not criteres_actifs:
         return articles
-# si criteres_articles ça ne s'arrete jamais?????????
     articles_dispo = [a for a in articles if not a.vendu]
     cles = list(criteres_actifs)
     n = len(cles)
