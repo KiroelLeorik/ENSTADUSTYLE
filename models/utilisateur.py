@@ -122,6 +122,12 @@ class Vendeur(Utilisateur):
     # Retire un article de la vente
 
     def mes_articles(self, tous_les_articles):
+                """
+        
+        :param self: 
+        :param tous_les_articles: 
+        :return: 
+        """
 
 
 # Retourne ses articles depuis la liste globale
@@ -129,9 +135,22 @@ class Vendeur(Utilisateur):
 
 class Acheteur(Utilisateur):
     def faire_offre(self, article, prix_propose, marge_max=0.1):
+                """
+        
+        :param article: 
+        :param prix_propose: 
+        :param marge_max: 
+        :return: 
+        """
 
     # Utilise proposer_achat() et retourne le résultat
 
     def rechercher_articles(self, articles, criteres):
+                """
+        
+        :param articles: 
+        :param criteres: 
+        :return: 
+        """
 # Utilise rechercher() et retourne les résultats
     
