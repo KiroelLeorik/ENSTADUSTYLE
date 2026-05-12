@@ -1,13 +1,14 @@
-from plateforme import Plateforme
+from models.plateforme import Plateforme
 
 if __name__ == '__main__':
+
     #Etape 1 : Initialisation de la plateforme
     p = Plateforme()
     p.charger_depuis_bdd()
     p.afficher_catalogue()
     #Etape 2 : connexion d'un utilisateur
     criteres = {"sous_categorie": "Vestes", "couleur": "Bleu", "taille": "M"}
-
+    """
     alice = p.trouver_utilisateur("alice92")
     alice.se_connecter("alice92", "hash1")
     alice_acheteur = p.en_tant_que_acheteur(alice)
@@ -18,7 +19,10 @@ if __name__ == '__main__':
         meilleur_article, score = resultats[0]
         statut = alice_acheteur.faire_offre(meilleur_article, prix_propose=10)
         print(f"\nOffre de 30€ sur {meilleur_article.nom} → {statut}")
-
+    """
+p.creer_utilisateur("nouveau_user", "Dupont", "Jean", "jean@mail.com", "motdepasse123")
+jean = p.trouver_utilisateur("nouveau_user")
+print(f"Nouvel utilisateur : {jean.pseudo}, id : {jean.id}")
 
 """
     # Bob veut vendre
