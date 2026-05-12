@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>Python</ID>
+  <OriginalElement>#C:/Users/Léo/PycharmProjects/ENSTADUSTYLE/models</OriginalElement>
+  <nodes>
+    <node x="-208.04092228397883" y="-80.0">models.utilisateur.Vendeur</node>
+    <node x="3062.9590769438287" y="-152.0">models.plateforme.Plateforme</node>
+    <node x="234.9590777160211" y="-236.0">models.utilisateur.Utilisateur</node>
+    <node x="1976.959076946875" y="-248.0">models.article.Article</node>
+    <node x="717.9590775332082" y="-92.0">models.utilisateur.Acheteur</node>
+    <node x="2409.95907694535" y="-30.999999999999996">typing.Hashable</node>
+    <node x="1160.9590773710088" y="-31.000000000000004">models.article.Vetement</node>
+    <node x="2630.959076944817" y="-116.0">models.transaction.Transaction</node>
+    <node x="1593.959077158942" y="-308.0">object</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="models.plateforme.Plateforme" target="object" relationship="REALIZATION">
+      <point x="-7.6943828844378E-5" y="-152.5" />
+      <point x="3260.959" y="-333.0" />
+      <point x="1754.959" y="-333.0" />
+      <point x="-7.715894184912031E-5" y="-308.5" />
+    </edge>
+    <edge source="models.transaction.Transaction" target="object" relationship="REALIZATION">
+      <point x="-7.694481701037148E-5" y="-116.5" />
+      <point x="2816.459" y="-333.0" />
+      <point x="1754.959" y="-333.0" />
+      <point x="-7.715894184912031E-5" y="-308.5" />
+    </edge>
+    <edge source="models.utilisateur.Utilisateur" target="object" relationship="REALIZATION">
+      <point x="-7.77160211100636E-5" y="-236.5" />
+      <point x="443.959" y="-333.0" />
+      <point x="1754.959" y="-333.0" />
+      <point x="-7.715894184912031E-5" y="-308.5" />
+    </edge>
+    <edge source="object" target="typing.Hashable" relationship="REALIZATION">
+      <point x="0.0" y="308.5" />
+      <point x="1754.959077158942" y="341.5" />
+      <point x="2489.95907694535" y="341.5" />
+      <point x="0.0" y="31.499999999999996" />
+    </edge>
+    <edge source="models.article.Article" target="object" relationship="REALIZATION">
+      <point x="-7.694687519688159E-5" y="-248.5" />
+      <point x="2162.959" y="-333.0" />
+      <point x="1754.959" y="-333.0" />
+      <point x="-7.715894184912031E-5" y="-308.5" />
+    </edge>
+    <edge source="models.utilisateur.Vendeur" target="models.utilisateur.Utilisateur" relationship="REALIZATION">
+      <point x="190.99992228397883" y="0.0" />
+      <point x="-209.0000777160211" y="0.0" />
+    </edge>
+    <edge source="models.article.Vetement" target="models.article.Article" relationship="REALIZATION">
+      <point x="0.0" y="31.5" />
+      <point x="1346.9590773710088" y="356.5" />
+      <point x="2162.959076946875" y="356.5" />
+      <point x="0.0" y="248.5" />
+    </edge>
+    <edge source="models.utilisateur.Acheteur" target="models.utilisateur.Utilisateur" relationship="REALIZATION">
+      <point x="-7.753320824122056E-5" y="92.5" />
+      <point x="908.959" y="254.5" />
+      <point x="205.0" y="254.5" />
+      <point x="205.0" y="0.5" />
+      <point x="-209.0000777160211" y="0.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.3297180043383948" showDependencies="false" x="1634.9999999999998" y="22.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+  </Categories>
+</Diagram>
+
