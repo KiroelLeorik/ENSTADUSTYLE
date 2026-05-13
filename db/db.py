@@ -3,7 +3,7 @@ import os
 
 def get_connection():
     """
-
+    Connection à la base de données
     :return:
     """
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
