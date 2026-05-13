@@ -5,6 +5,8 @@ class Article:
     def __init__(self, id, nom, description, categorie, prix_vendeur,
                  prix_min, etat, id_vendeur, date_publication, photo, vendu=0):
         """
+        AUTHOR : LARDILLIER Léo
+
         :param id: identifiant unique de l'article
         :param nom: nom donnée à l'article par le vendeur
         :param description: descrption donnée à l'article par le vendeur
