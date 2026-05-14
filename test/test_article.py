@@ -1,3 +1,5 @@
+""" ----------- Author : LARDILLIER Léo ------------- """
+
 import unittest
 from models.article import Article, Vetement
 
@@ -13,10 +15,9 @@ class TestArticle(unittest.TestCase):
         """Crée un article et un vêtement de test réutilisables avant chaque test"""
         self.article = Article(
             id=1, nom="Veste en jean", description="Très belle veste",
-            categorie="Vêtements", sous_categorie="Vestes", genre="Femme",
-            taille="M", couleur="Bleu", marque="Levi's", etat="bon",
+            categorie="Vêtements", etat="bon",
             prix_vendeur=35.0, prix_min=25.0, id_vendeur=1,
-            date_publication="2026-04-10", photo="veste.jpg", matiere="Denim"
+            date_publication="2026-04-10", photo="veste.jpg"
         )
         self.vetement = Vetement(
             id=2, nom="Robe fleurie", description="Robe d'été légère",
@@ -25,7 +26,6 @@ class TestArticle(unittest.TestCase):
             prix_vendeur=20.0, prix_min=15.0, id_vendeur=2,
             date_publication="2026-04-12", photo="robe.jpg", matiere="Coton"
         )
-        self.
     # --- Test 1 : Création d'un article ---
     def test_creation_nom(self):
         """
@@ -67,16 +67,16 @@ class TestArticle(unittest.TestCase):
 
     # --- Test 3 : Prix minimum ---
     def test_prix_min_inferieur_prix_vendeur(self):
-                """
-        
+        """
+        Vérifie que le prix minimum est inférieur au prix vendeur
         :param self: 
         :return: 
         """
-        """Vérifie que le prix minimum est inférieur au prix vendeur"""
+
         self.assertLess(self.article.prix_min, self.article.prix_vendeur)
 
     def test_prix_min_valeur(self):
-          """
+        """
         
         :param self: 
         :return: 

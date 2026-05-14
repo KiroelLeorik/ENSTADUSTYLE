@@ -1,3 +1,5 @@
+""" ----------- Author :  ------------- """
+
 import unittest
 from models.utilisateur import Utilisateur, Vendeur, Acheteur
 
@@ -5,11 +7,11 @@ from models.utilisateur import Utilisateur, Vendeur, Acheteur
 class TestUtilisateur(unittest.TestCase):
 
     def setUp(self):
-            """
+        """
     
-    :param self: 
-    :return: 
-    """
+        :param self:
+        :return:
+        """
         """Crée un utilisateur de test réutilisable avant chaque test"""
         self.user = Utilisateur(
             id=1, pseudo="alice92", nom="Martin", prenom="Alice",

@@ -1,4 +1,4 @@
-
+""" ----------- Author : LARDILLIER Léo ------------- """
 class Utilisateur:
     def __init__(self, id, pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation, date_inscription):
         self.id = id

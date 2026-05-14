@@ -1,3 +1,4 @@
+""" ----------- Author : GREGOIRE Louna ------------- """
 from db.db import *
 
 def proposer_achat(acheteur, article, prix_acheteur):

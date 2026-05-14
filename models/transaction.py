@@ -1,3 +1,5 @@
+""" ----------- Author : LARDILLIER Léo ------------- """
+
 from datetime import datetime
 
 class Transaction:

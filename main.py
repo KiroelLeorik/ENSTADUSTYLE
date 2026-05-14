@@ -1,17 +1,24 @@
+""" ----------- Author : LARDILLIER Léo -------------
+
+Ce main représente la console à partir de laquelle toutes les opérations sont effectuées.
+"""
+
 from models.plateforme import Plateforme
 
 if __name__ == '__main__':
-
+    """ Essai de recherche d'article """
     #Etape 1 : Initialisation de la plateforme
     p = Plateforme()
     p.charger_depuis_bdd()
     p.afficher_catalogue()
-    #Etape 2 : connexion d'un utilisateur
-    criteres = {"sous_categorie": "Vestes", "couleur": "Bleu", "taille": "M"}
 
+    #Etape 2 : Connexion d'un utilisateur
     alice = p.trouver_utilisateur("alice92")
-    alice.se_connecter("alice92", "hash1")
-    alice_acheteur = p.en_tant_que_acheteur(alice)
+    alice.se_connecter("alice92", "hash1") #Il reste à implémenter le système de connexion de manière sécurisée
+    alice_acheteur = p.en_tant_que_acheteur(alice) #On charge l'utilisateur alice en tant qu'acheteur
+
+    #Etape 3 : Lancement de la recherche
+    criteres = {"sous_categorie": "Vestes", "couleur": "Bleu", "taille": "M"}
     resultats = alice_acheteur.rechercher_articles(p.articles, criteres)
     for article, score in resultats:
         print(f"{article.nom} — score: {score:.2f}")
@@ -20,19 +27,20 @@ if __name__ == '__main__':
         statut = alice_acheteur.faire_offre(meilleur_article, prix_propose=10)
         print(f"\nOffre de 30€ sur {meilleur_article.nom} → {statut}")
 
-"""
-p.creer_utilisateur("nouveau_user", "Dupont", "Jean", "jean@mail.com", "motdepasse123")
-jean = p.trouver_utilisateur("nouveau_user")
-print(f"Nouvel utilisateur : {jean.pseudo}, id : {jean.id}")
-"""
+    """----------------- Essai création d'utilisateur ---------------------"""
+    p.creer_utilisateur("nouveau_user", "Dupont", "Jean", "jean@mail.com", "motdepasse123")
+    jean = p.trouver_utilisateur("nouveau_user")
+    print(f"Nouvel utilisateur : {jean.pseudo}, id : {jean.id}")
 
-# Bob veut vendre
-bob = p.trouver_utilisateur("bob_style")
-bob_vendeur = p.en_tant_que_vendeur(bob)
-from models.article import Vetement
 
-# Bob crée un nouvel article from scratch
-nouveau_article = Vetement(
+    """------------------ Essai de mise en vente d'un article -------------------"""
+    #Etape 1: Bob veut vendre, il se connecte
+    bob = p.trouver_utilisateur("bob_style")
+    bob_vendeur = p.en_tant_que_vendeur(bob)
+    from models.article import Vetement
+
+    #Etape 2 : Bob crée un nouvel article
+    nouveau_article = Vetement(
     id=21,
     nom="Doudoune North Face",
     description="Doudoune noire, très chaude, portée un hiver",
@@ -52,9 +60,9 @@ nouveau_article = Vetement(
     matiere="Nylon"
 )
 
-# Bob le met en vente
-bob_vendeur.mettre_en_vente(nouveau_article)
+#Etape 3 : Bob le met en vente
 
+print("Article mis en vente ?", bob_vendeur.mettre_en_vente(nouveau_article))
 # Ajout au catalogue de la plateforme
 p.ajouter_article(nouveau_article)
 

@@ -1,3 +1,4 @@
+""" ----------- Author : GREGOIRE Louna ------------- """
 import time
 from services.recherche import rechercher, scorer_articles, scorer_articles_python
 from db.db import *

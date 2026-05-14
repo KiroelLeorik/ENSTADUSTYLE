@@ -1,18 +1,19 @@
+""" ----------- Author : LARDILLIER Léo ------------- """
+
 import sqlite3
 import os
 
 def get_connection():
     """
     Connection à la base de données
-    :return:
+    :return: une variable qui stocke la BDD
     """
     BASE_DIR = os.path.dirname(os.path.abspath(__file__))
     conn = sqlite3.connect(os.path.join(BASE_DIR, "../db/marche.db"))
     return conn
 def get_all_articles():
     """
-
-    :return:
+    :return: Tout les articles présent dans la BDD
     """
     conn = get_connection()
     c = conn.cursor()
@@ -23,8 +24,8 @@ def get_all_articles():
 def get_article_by_id(id):
     """
 
-    :param id:
-    :return:
+    :param id: identifiant de l'article recherché
+    :return: les détails de l'article trouvé par id
     """
     conn = get_connection()
     c = conn.cursor()

@@ -6,3 +6,7 @@ pour les actions user ou dans plateforme pour les actions admin, pas dans matchi
 Une fonction inutile "ajouter_article" dans plateforme.
 
 Créer une hierarchie admin (plateforme), user (utilisateur).
+
+Créer le système d'authent
+
+Coder le front

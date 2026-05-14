@@ -1,3 +1,4 @@
+""" ----------- Author : GREGOIRE Louna ------------- """
 import numpy as np
 
 #score=[(catégorie,0.5),(sous_catégorie,0.4),(genre,0.1),(taille,0.3),(couleur,0.2),(etat,0.4),(matiere,0.2)]

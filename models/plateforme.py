@@ -1,10 +1,19 @@
-
+""" ----------- Author : LARDILLIER Léo ------------- """
 class Plateforme:
     def __init__(self):
         self.utilisateurs = []    # composition
         self.articles = []        # composition
         self.transactions = []    # composition
-
+        #self.authentifie = False #to do
+    """
+    TODO
+    def authentifier_utilisateur(self, log, password):
+        for user in self.utilisateurs:
+            if log == user.pseudo:
+                if password == user.password:
+                    self.authentifie = True
+        self.authentifie = False
+    """
     def creer_utilisateur(self, pseudo, nom, prenom, mail, mot_de_passe, est_pro=False, evaluation=0, localisation=None, date_inscription=None):
         '''
         :param pseudo:
