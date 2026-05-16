@@ -6,9 +6,9 @@ import numpy as np
 def scorer_articles(articles, criteres): 
     """
 
-    :param articles:
+    :param articles:liste
     :param criteres:
-    :return:
+    :return:liste
     """
     mapping = {"categorie": "categorie","sous_categorie": "sous_categorie","genre": "genre","taille": "taille","couleur": "couleur","marque": "marque","etat": "etat","matiere": "matiere"}
     criteres_actifs = {k : v for k, v in criteres.items() if k in mapping} #l'utilisateur ne peut pas inventer de cat√©gorie
@@ -53,9 +53,9 @@ La version calcul matriciel ci-dessous est plus rapide et permet de trier les r√
 def rechercher(articles, criteres):
     """
 
-    :param articles:
+    :param articles:liste
     :param criteres:
-    :return:
+    :return:liste
     """
     resultats = []
     categorie = criteres.get('categorie')
