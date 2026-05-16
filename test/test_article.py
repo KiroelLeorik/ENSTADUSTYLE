@@ -7,11 +7,7 @@ from models.article import Article, Vetement
 class TestArticle(unittest.TestCase):
 
     def setUp(self):
-        """
-        
-        :param self: 
-        :return: 
-        """
+
         """Crée un article et un vêtement de test réutilisables avant chaque test"""
         self.article = Article(
             id=1, nom="Veste en jean", description="Très belle veste",
@@ -28,39 +24,23 @@ class TestArticle(unittest.TestCase):
         )
     # --- Test 1 : Création d'un article ---
     def test_creation_nom(self):
-        """
-        
-        :param self: 
-        :return: 
-        """
+
         """Vérifie que le nom est bien assigné"""
         self.assertEqual(self.article.nom, "Veste en jean")
 
     def test_creation_prix(self):
-        """
-        
-        :param self: 
-        :return: 
-        """
+
         """Vérifie que le prix vendeur est bien assigné"""
         self.assertEqual(self.article.prix_vendeur, 35.0)
 
     # --- Test 2 : Disponibilité ---
     def test_disponible_par_defaut(self):
-        """
-        
-        :param self: 
-        :return: 
-        """
+
         """Vérifie qu'un article est disponible par défaut"""
         self.assertTrue(self.article.est_disponible())
 
     def test_non_disponible_si_vendu(self):
-        """
-        
-        :param self: 
-        :return: 
-        """
+
         """Vérifie qu'un article vendu n'est plus disponible"""
         self.article.vendu = True
         self.assertFalse(self.article.est_disponible())
@@ -69,37 +49,24 @@ class TestArticle(unittest.TestCase):
     def test_prix_min_inferieur_prix_vendeur(self):
         """
         Vérifie que le prix minimum est inférieur au prix vendeur
-        :param self: 
-        :return: 
+ 
         """
 
         self.assertLess(self.article.prix_min, self.article.prix_vendeur)
 
     def test_prix_min_valeur(self):
-        """
-        
-        :param self: 
-        :return: 
-        """
+
         """Vérifie que le prix minimum correspond à la valeur donnée"""
         self.assertEqual(self.article.prix_min, 25.0)
 
     # --- Test 4 : Héritage Vetement ---
     def test_vetement_est_article(self):
-        """
-        
-        :param self: 
-        :return: 
-        """
+
         """Vérifie que Vetement hérite bien de Article"""
         self.assertIsInstance(self.vetement, Article)
 
     def test_vetement_get_details(self):
-        """
-        
-        :param self: 
-        :return: 
-        """
+
         """Vérifie que get_details retourne bien une chaîne de caractères"""
         details = self.vetement.get_details()
         self.assertIsInstance(details, str)
