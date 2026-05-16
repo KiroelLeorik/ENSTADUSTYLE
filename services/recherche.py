@@ -7,7 +7,7 @@ def scorer_articles(articles, criteres):
     """
 
     :param articles:liste
-    :param criteres:
+    :param criteres:liste
     :return:liste
     """
     mapping = {"categorie": "categorie","sous_categorie": "sous_categorie","genre": "genre","taille": "taille","couleur": "couleur","marque": "marque","etat": "etat","matiere": "matiere"}
@@ -96,9 +96,9 @@ def rechercher(articles, criteres):
 def scorer_articles_python(articles, criteres):
     """
 
-    :param articles:
+    :param articles:liste
     :param criteres:
-    :return:
+    :return:liste
     """
     mapping = {"categorie": "categorie","sous_categorie": "sous_categorie","genre": "genre","taille": "taille","couleur": "couleur","marque": "marque","etat": "etat","matiere": "matiere"}
     criteres_actifs = {k: v for k, v in criteres.items() if k in mapping} #l'utilisateur ne peut pas inventer une catégorie
