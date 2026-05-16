@@ -14,7 +14,7 @@ def scorer_articles(articles, criteres):
     criteres_actifs = {k : v for k, v in criteres.items() if k in mapping} #l'utilisateur ne peut pas inventer de catégorie
     if not criteres_actifs:
         return articles
-    articles_dispo = [a for a in articles if not a.vendu] # rencensement des articles encore en stock
+    articles_dispo = [a for a in articles if not a.vendu] # recensement des articles encore en stock
     cles = list(criteres_actifs)
     n = len(cles)
     #poidprim=np.array([0]*n)      #cette partie de la fonction correspond au scoring commenté en dessus
@@ -45,10 +45,8 @@ def scorer_articles(articles, criteres):
 
 
 """---------------------- OLD ------------------------------------------
-Version lente qui ne sort pas une liste triée en fonction du score mais qui sort seulement les articles qui correspondent exactement aux
-critères.
-La version calcul matriciel ci-dessous est plus rapide et permet de trier les résultats en fonction du score obtenu."""
-
+Version python qui ne sort pas une liste triée en fonction du score mais qui sort seulement les articles qui correspondent exactement aux
+critères."""
 
 def rechercher(articles, criteres):
     """
@@ -93,6 +91,9 @@ def rechercher(articles, criteres):
             resultats.append(a)
     return resultats
 
+"""
+Version python de la fonction scorer_article. Elle est plus rapide que la version numpy à cause de la conversion des typpes python en array numpy,
+on utilise néanmoins le scoring vectoriel numpy pour valider la figure optionnel."""
 def scorer_articles_python(articles, criteres):
     """
 

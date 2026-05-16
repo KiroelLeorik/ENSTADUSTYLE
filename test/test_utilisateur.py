@@ -1,4 +1,4 @@
-""" ----------- Author :  ------------- """
+""" ----------- Author : Lardillier Léo ------------- """
 
 import unittest
 from models.utilisateur import Utilisateur, Vendeur, Acheteur

@@ -10,7 +10,7 @@ from services.recherche import rechercher
 class TestTransaction(unittest.TestCase):
     """
     Tests unitaires pour la classe Transaction.
-    Auteur : [Prenom NOM - Personne A]
+    Author : Lardillier Léo
     """
 
     def setUp(self):
