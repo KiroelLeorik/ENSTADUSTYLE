@@ -42,7 +42,7 @@ class TestTransaction(unittest.TestCase):
 class TestPlateforme(unittest.TestCase):
     """
     Tests unitaires pour la classe Plateforme.
-    Auteur : [Prenom NOM - Personne A]
+    Auteur : LARDILLER Léo
     """
 
     def setUp(self):
@@ -80,7 +80,7 @@ class TestPlateforme(unittest.TestCase):
 class TestMatching(unittest.TestCase):
     """
     Tests unitaires pour l'algorithme de matching acheteur/vendeur.
-    Auteur : [Prenom NOM - Personne B]
+    Auteur : GREGOIRE Louna
     """
 
     def setUp(self):
@@ -125,7 +125,7 @@ class TestMatching(unittest.TestCase):
 class TestRecherche(unittest.TestCase):
     """
     Tests unitaires pour l'algorithme de recherche.
-    Auteur : [Prenom NOM - Personne B]
+    Auteur : GREGOIRE Louna
     """
 
     def setUp(self):
