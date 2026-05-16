@@ -104,7 +104,7 @@ def scorer_articles_python(articles, criteres):
     mapping = {"categorie": "categorie","sous_categorie": "sous_categorie","genre": "genre","taille": "taille","couleur": "couleur","marque": "marque","etat": "etat","matiere": "matiere"}
     criteres_actifs = {k: v for k, v in criteres.items() if k in mapping} #l'utilisateur ne peut pas inventer une catégorie
     if not criteres_actifs:             
-        return articles                 si aucune catégorie n'est valable, aucun article n'est pertinent, la liste article n'a donc pas besoin d'etre triée par pertinence       
+        return articles                 #si aucune catégorie n'est valable, aucun article n'est pertinent, la liste article n'a donc pas besoin d'etre triée par pertinence
     cles = list(criteres_actifs)
     n = len(cles)
     resultats = []
