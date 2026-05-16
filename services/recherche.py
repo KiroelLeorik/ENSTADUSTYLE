@@ -2,7 +2,7 @@
 import numpy as np
 
 #score=[(catégorie,0.5),(sous_catégorie,0.4),(genre,0.1),(taille,0.3),(couleur,0.2),(etat,0.4),(matiere,0.2)]
-# Ce scoring sera utilisé si le reste fonctionne, nousnous concentrons d'abord sur une version du site plus simple mais fonctionnelle.
+# Ce scoring sera utilisé si le reste fonctionne, nous nous concentrons d'abord sur une version du site plus simple mais fonctionnelle.
 def scorer_articles(articles, criteres): 
     """
 
