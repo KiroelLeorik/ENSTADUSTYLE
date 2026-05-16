@@ -7,7 +7,7 @@ def scorer_articles(articles, criteres):
     """
 
     :param articles:liste
-    :param criteres:liste
+    :param criteres:dictionnaire
     :return:liste
     """
     mapping = {"categorie": "categorie","sous_categorie": "sous_categorie","genre": "genre","taille": "taille","couleur": "couleur","marque": "marque","etat": "etat","matiere": "matiere"}
@@ -54,7 +54,7 @@ def rechercher(articles, criteres):
     """
 
     :param articles:liste
-    :param criteres:
+    :param criteres:dictionnaire
     :return:liste
     """
     resultats = []
@@ -97,7 +97,7 @@ def scorer_articles_python(articles, criteres):
     """
 
     :param articles:liste
-    :param criteres:
+    :param criteres:dictionnaire
     :return:liste
     """
     mapping = {"categorie": "categorie","sous_categorie": "sous_categorie","genre": "genre","taille": "taille","couleur": "couleur","marque": "marque","etat": "etat","matiere": "matiere"}
