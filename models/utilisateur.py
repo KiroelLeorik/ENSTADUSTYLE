@@ -1,6 +1,28 @@
 """ ----------- Author : LARDILLIER Léo ------------- """
+
+from typing import Optional, List, Tuple
+
 class Utilisateur:
-    def __init__(self, id, pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation, date_inscription):
+    """
+    Représente un utilisateur inscrit sur la plateforme.
+    Classe de base dont héritent Vendeur et Acheteur.
+    """
+
+    def __init__(self, id: int, pseudo: str, nom: str, prenom: str, mail: str,
+                 mot_de_passe: str, est_pro: bool, evaluation: float,
+                 localisation: Optional[str], date_inscription: Optional[str]) -> None:
+        """
+        :param id: identifiant unique de l'utilisateur en base de données
+        :param pseudo: nom d'utilisateur public
+        :param nom: nom de famille
+        :param prenom: prénom
+        :param mail: adresse e-mail
+        :param mot_de_passe: mot de passe (stocké en attribut privé)
+        :param est_pro: True si l'utilisateur est un vendeur professionnel
+        :param evaluation: note moyenne attribuée par la communauté (0 à 5)
+        :param localisation: ville ou région de l'utilisateur
+        :param date_inscription: date d'inscription sur la plateforme
+        """
         self.id = id
         self.pseudo = pseudo
         self.nom = nom
@@ -13,17 +35,34 @@ class Utilisateur:
         self.date_inscription = date_inscription
 
     @property
-    def mot_de_passe(self):
+    def mot_de_passe(self) -> str:
+        """
+        Retourne le mot de passe de l'utilisateur (lecture seule via le setter).
+
+        :return: mot de passe actuel
+        """
         return self.__mot_de_passe
 
     @mot_de_passe.setter
-    def mot_de_passe(self, nouveau_mdp):
+    def mot_de_passe(self, nouveau_mdp: str) -> None:
+        """
+        Définit un nouveau mot de passe après validation de la longueur minimale.
+
+        :param nouveau_mdp: nouveau mot de passe (doit contenir au moins 6 caractères)
+        """
         if len(nouveau_mdp) < 6:
             print("Le nouveau mot de passe doit au moins contenir 6 caractères")
             return
         self.__mot_de_passe = nouveau_mdp
 
-    def set_mot_de_passe(self, ancien_mdp, nouveau_mdp):
+    def set_mot_de_passe(self, ancien_mdp: str, nouveau_mdp: str) -> bool:
+        """
+        Modifie le mot de passe après vérification de l'ancien mot de passe.
+
+        :param ancien_mdp: mot de passe actuel à vérifier
+        :param nouveau_mdp: nouveau mot de passe souhaité (au moins 6 caractères)
+        :return: True si le changement a réussi, False sinon
+        """
         if ancien_mdp != self.__mot_de_passe:
             print("Ancien mot de passe incorrect")
             return False
@@ -31,7 +70,14 @@ class Utilisateur:
         return True
     # Incomplet, manque la persistance BDD
 
-    def se_connecter(self, pseudo, mdp):
+    def se_connecter(self, pseudo: str, mdp: str) -> bool:
+        """
+        Vérifie les identifiants de connexion de l'utilisateur.
+
+        :param pseudo: nom d'utilisateur saisi
+        :param mdp: mot de passe saisi
+        :return: True si la connexion est réussie, False sinon
+        """
         if pseudo != self.pseudo:
             print("Pseudo incorrect")
             return False
@@ -42,10 +88,17 @@ class Utilisateur:
         return True
     #Incomplet, il faut modifier la DB
 
-    def modifier_profil(self, pseudo=None, mail=None, localisation=None):
+    def modifier_profil(self, pseudo: Optional[str] = None,
+                        mail: Optional[str] = None,
+                        localisation: Optional[str] = None) -> bool:
         """
         Modifie les informations du profil de l'utilisateur.
-        Les paramètres peuvent être None si aucun changement n'est souhaité.
+        Les paramètres non renseignés (None) ne sont pas modifiés.
+
+        :param pseudo: nouveau nom d'utilisateur (optionnel)
+        :param mail: nouvelle adresse e-mail (optionnel)
+        :param localisation: nouvelle localisation (optionnel)
+        :return: True si au moins un champ a été modifié, False sinon
         """
         if pseudo is not None:
             self.pseudo = pseudo
@@ -62,15 +115,46 @@ class Utilisateur:
         return True
     #Incomplet, manque la persistance BDD
 
-    def afficher_profil(self):
+    def afficher_profil(self) -> Tuple[str, str, Optional[str]]:
+        """
+        Retourne les informations publiques du profil de l'utilisateur.
+
+        :return: tuple (pseudo, mail, localisation)
+        """
         return(self.pseudo, self.mail, self.localisation)
 
+
 class Vendeur(Utilisateur):
-    def __init__(self, id, pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation, date_inscription):
+    """
+    Représente un utilisateur dans son rôle de vendeur.
+    Hérite de Utilisateur et ajoute la gestion des articles mis en vente.
+    """
+
+    def __init__(self, id: int, pseudo: str, nom: str, prenom: str, mail: str,
+                 mot_de_passe: str, est_pro: bool, evaluation: float,
+                 localisation: Optional[str], date_inscription: Optional[str]) -> None:
+        """
+        :param id: identifiant unique de l'utilisateur
+        :param pseudo: nom d'utilisateur public
+        :param nom: nom de famille
+        :param prenom: prénom
+        :param mail: adresse e-mail
+        :param mot_de_passe: mot de passe
+        :param est_pro: True si l'utilisateur est un vendeur professionnel
+        :param evaluation: note moyenne attribuée par la communauté (0 à 5)
+        :param localisation: ville ou région du vendeur
+        :param date_inscription: date d'inscription sur la plateforme
+        """
         super().__init__(id, pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation, date_inscription)
         self.liste_article = []
-#persistance BDD OK
-    def mettre_en_vente(self, article):
+
+    def mettre_en_vente(self, article: "Article") -> bool:
+        """
+        Publie un article sur la plateforme et l'enregistre en base de données.
+
+        :param article: instance de Article ou Vetement à mettre en vente
+        :return: True si l'article a été ajouté, False s'il est déjà vendu ou déjà en vente
+        """
         if article.vendu:
             print("L'article est déjà vendu !")
             return False
@@ -83,16 +167,27 @@ class Vendeur(Utilisateur):
             insert_article(article.nom, article.description, article.categorie, article.sous_categorie, article.genre, article.taille, article.couleur, article.marque, article.etat, article.prix_vendeur, article.prix_min, article.id_vendeur, article.photo, article.matiere)
             return True
 
-    def retirer_article(self, article):
+    def retirer_article(self, article: "Article") -> bool:
+        """
+        Retire un article de la liste de vente du vendeur.
+
+        :param article: instance de Article à retirer
+        :return: True si l'article a été retiré, False s'il n'était pas en vente
+        """
         if article in self.liste_article:
             self.liste_article.remove(article)
             return True
         else:
             print("Cet article n'existe pas")
             return False
-    # Retire un article de la vente
-    #Incomplet, manque la persistance BDD
-    def mes_articles(self):
+    # Incomplet, manque la persistance BDD
+
+    def mes_articles(self) -> Tuple[List, List]:
+        """
+        Classe les articles du vendeur en deux catégories : vendus et en vente.
+
+        :return: tuple (liste des articles vendus, liste des articles encore en vente)
+        """
         article_vendu = []
         article_en_vente = []
         for a in self.liste_article:
@@ -104,22 +199,59 @@ class Vendeur(Utilisateur):
 
 
 class Acheteur(Utilisateur):
-    def __init__(self, id, pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation, date_inscription):
+    """
+    Représente un utilisateur dans son rôle d'acheteur.
+    Hérite de Utilisateur et ajoute la gestion des favoris et des offres d'achat.
+    """
+
+    def __init__(self, id: int, pseudo: str, nom: str, prenom: str, mail: str,
+                 mot_de_passe: str, est_pro: bool, evaluation: float,
+                 localisation: Optional[str], date_inscription: Optional[str]) -> None:
+        """
+        :param id: identifiant unique de l'utilisateur
+        :param pseudo: nom d'utilisateur public
+        :param nom: nom de famille
+        :param prenom: prénom
+        :param mail: adresse e-mail
+        :param mot_de_passe: mot de passe
+        :param est_pro: True si l'utilisateur est un vendeur professionnel
+        :param evaluation: note moyenne attribuée par la communauté (0 à 5)
+        :param localisation: ville ou région de l'acheteur
+        :param date_inscription: date d'inscription sur la plateforme
+        """
         super().__init__(id, pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation, date_inscription)
         self.favoris = []  # composition — liste d'articles favoris
 
-    def faire_offre(self, article, prix_propose):
-        # Utilise proposer_achat() de matching.py
-        # Persistance BDD OK
+    def faire_offre(self, article: "Article", prix_propose: float) -> str:
+        """
+        Soumet une offre d'achat sur un article et déclenche l'algorithme de négociation.
+
+        :param article: instance de Article sur lequel faire une offre
+        :param prix_propose: prix proposé par l'acheteur (en euros)
+        :return: statut de la transaction ('acceptee', 'negociation' ou 'refusee')
+        """
         from services.matching import proposer_achat
         return proposer_achat(self, article, prix_propose)
 
-    def rechercher_articles(self, articles, criteres):
+    def rechercher_articles(self, articles: List, criteres: dict) -> List[Tuple]:
+        """
+        Recherche et classe des articles selon des critères de filtrage.
+
+        :param articles: liste de tous les articles disponibles
+        :param criteres: dictionnaire de critères (ex. {'taille': 'M', 'couleur': 'Bleu'})
+        :return: liste de tuples (article, score) triés par pertinence décroissante
+        """
         from services.recherche import scorer_articles
         return scorer_articles(articles, criteres)
 
-    def ajouter_favori(self, article):
-        if article not in self.favoris: #Faire un onglet favoris dans la BDD
+    def ajouter_favori(self, article: "Article") -> bool:
+        """
+        Ajoute un article à la liste des favoris de l'acheteur.
+
+        :param article: instance de Article à ajouter aux favoris
+        :return: True si l'ajout a réussi, False si l'article est déjà en favori
+        """
+        if article not in self.favoris:
             self.favoris.append(article)
             return True
         else:
@@ -127,13 +259,17 @@ class Acheteur(Utilisateur):
             return False
         # Incomplet, manque la persistance BDD
 
-    def retirer_favori(self, article):
-        if article in self.favoris: #Faire un onglet favoris dans la BDD
+    def retirer_favori(self, article: "Article") -> bool:
+        """
+        Retire un article de la liste des favoris de l'acheteur.
+
+        :param article: instance de Article à retirer des favoris
+        :return: True si le retrait a réussi, False si l'article n'était pas en favori
+        """
+        if article in self.favoris:
             self.favoris.remove(article)
             return True
         else:
             print("L'article n'est pas dans vos favoris !")
             return False
         # Incomplet, manque la persistance BDD
-
-    

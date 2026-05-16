@@ -1,14 +1,19 @@
 """ ----------- Author : GREGOIRE Louna ------------- """
 import numpy as np
+from typing import List, Tuple, Union
 
 #score=[(catégorie,0.5),(sous_catégorie,0.4),(genre,0.1),(taille,0.3),(couleur,0.2),(etat,0.4),(matiere,0.2)]
 # Ce scoring sera utilisé si le reste fonctionne, nous nous concentrons d'abord sur une version du site plus simple mais fonctionnelle.
-def scorer_articles(articles, criteres): 
+def scorer_articles(articles: list, criteres: dict) -> Union[List[Tuple], List]:
     """
+    Classe les articles disponibles par pertinence par rapport aux critères fournis,
+    en utilisant un scoring vectoriel NumPy.
+    Chaque critère a le même poids (1/n). Les articles vendus sont exclus des résultats.
 
-    :param articles:liste
-    :param criteres:dictionnaire
-    :return:liste
+    :param articles: liste d'instances de Article ou Vetement
+    :param criteres: dictionnaire de filtres (ex. {'taille': 'M', 'couleur': 'Bleu'})
+    :return: liste de tuples (article, score) triés par pertinence décroissante (score entre 0 et 1),
+             ou la liste brute des articles si aucun critère valide n'est fourni
     """
     mapping = {"categorie": "categorie","sous_categorie": "sous_categorie","genre": "genre","taille": "taille","couleur": "couleur","marque": "marque","etat": "etat","matiere": "matiere"}
     criteres_actifs = {k : v for k, v in criteres.items() if k in mapping} #l'utilisateur ne peut pas inventer de catégorie
@@ -48,12 +53,15 @@ def scorer_articles(articles, criteres):
 Version python qui ne sort pas une liste triée en fonction du score mais qui sort seulement les articles qui correspondent exactement aux
 critères."""
 
-def rechercher(articles, criteres):
+def rechercher(articles: list, criteres: dict) -> List:
     """
+    Filtre les articles disponibles en ne retournant que ceux qui correspondent
+    exactement à tous les critères spécifiés. Fonction de recherche basique sans scoring.
 
-    :param articles:liste
-    :param criteres:dictionnaire
-    :return:liste
+    :param articles: liste d'instances de Article ou Vetement
+    :param criteres: dictionnaire de filtres acceptés : categorie, sous_categorie, genre,
+                     taille, couleur, marque, etat, prix (budget maximum), matiere
+    :return: liste des articles disponibles correspondant à tous les critères
     """
     resultats = []
     categorie = criteres.get('categorie')
@@ -94,12 +102,17 @@ def rechercher(articles, criteres):
 """
 Version python de la fonction scorer_article. Elle est plus rapide que la version numpy à cause de la conversion des typpes python en array numpy,
 on utilise néanmoins le scoring vectoriel numpy pour valider la figure optionnel."""
-def scorer_articles_python(articles, criteres):
+def scorer_articles_python(articles: list, criteres: dict) -> Union[List[Tuple], List]:
     """
+    Classe les articles disponibles par pertinence par rapport aux critères fournis,
+    en utilisant un scoring pur Python (sans NumPy).
+    Plus rapide que scorer_articles() sur les petits jeux de données car elle évite
+    la conversion des types Python en tableaux NumPy.
 
-    :param articles:liste
-    :param criteres:dictionnaire
-    :return:liste
+    :param articles: liste d'instances de Article ou Vetement
+    :param criteres: dictionnaire de filtres (ex. {'taille': 'M', 'couleur': 'Bleu'})
+    :return: liste de tuples (article, score) triés par pertinence décroissante (score entre 0 et 1),
+             ou la liste brute des articles si aucun critère valide n'est fourni
     """
     mapping = {"categorie": "categorie","sous_categorie": "sous_categorie","genre": "genre","taille": "taille","couleur": "couleur","marque": "marque","etat": "etat","matiere": "matiere"}
     criteres_actifs = {k: v for k, v in criteres.items() if k in mapping} #l'utilisateur ne peut pas inventer une catégorie

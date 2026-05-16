@@ -1,11 +1,14 @@
 """ ----------- Author : LARDILLIER Léo ------------- """
 
+from typing import Optional
+
 class Article:
     """
     Classe représentant un article de la base de donnée.
     """
-    def __init__(self, id, nom, description, categorie, prix_vendeur,
-                 prix_min, etat, id_vendeur, date_publication, photo, vendu=0):
+    def __init__(self, id: int, nom: str, description: str, categorie: str, prix_vendeur: float,
+                 prix_min: float, etat: str, id_vendeur: int, date_publication: str,
+                 photo: Optional[str], vendu: int = 0) -> None:
         """
         :param id: identifiant unique de l'article
         :param nom: nom donnée à l'article par le vendeur
@@ -31,7 +34,7 @@ class Article:
         self.photo = photo
         self.vendu = bool(vendu)
 
-    def est_disponible(self):
+    def est_disponible(self) -> bool:
         """
         Vérifie si l'article est disponible pour la vente.
         :return: True si l'article n'est pas vendu, False sinon.
@@ -40,13 +43,15 @@ class Article:
 
 class Vetement(Article):
     """
-    Représente un bêtement mis en vente sur la plateforme.
-    Hérite de Article et ajoute les cartactéristiques propres aux vêtements
+    Représente un vêtement mis en vente sur la plateforme.
+    Hérite de Article et ajoute les caractéristiques propres aux vêtements.
     """
-    def __init__(self, id, nom, description, categorie, prix_vendeur,
-                 prix_min, etat, id_vendeur, date_publication, photo, vendu=0,
-                 sous_categorie=None, genre=None, taille=None, couleur=None,
-                 marque=None, matiere=None):
+    def __init__(self, id: int, nom: str, description: str, categorie: str, prix_vendeur: float,
+                 prix_min: float, etat: str, id_vendeur: int, date_publication: str,
+                 photo: Optional[str], vendu: int = 0, sous_categorie: Optional[str] = None,
+                 genre: Optional[str] = None, taille: Optional[str] = None,
+                 couleur: Optional[str] = None, marque: Optional[str] = None,
+                 matiere: Optional[str] = None) -> None:
         """
         :param sous_categorie: sous_categorie (Veste, Jean, ...)
         :param genre: catégorie de genre ciblée par le vêtement
@@ -64,8 +69,10 @@ class Vetement(Article):
         self.marque = marque
         self.matiere = matiere
 
-    def get_details(self):
+    def get_details(self) -> str:
         """
-        :return: Renvoi les informations basiques à propos du vêtement
+        Retourne un résumé des caractéristiques principales du vêtement.
+
+        :return: chaîne de caractères au format "marque - taille - couleur - matière"
         """
         return f"{self.marque} - {self.taille} - {self.couleur} - {self.matiere}"

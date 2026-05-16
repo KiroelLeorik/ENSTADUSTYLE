@@ -1,7 +1,20 @@
 """ ----------- Author : GREGOIRE Louna ------------- """
 from db.db import *
 
-def proposer_achat(acheteur, article, prix_acheteur):
+def proposer_achat(acheteur: "Acheteur", article: "Article", prix_acheteur: float) -> str:
+    """
+    Évalue une offre d'achat et détermine le statut de la transaction selon trois cas :
+    - Acceptée  : prix proposé >= prix du vendeur (article marqué vendu)
+    - Négociation : prix proposé >= prix minimum du vendeur (en attente de validation)
+    - Refusée   : prix proposé < prix minimum du vendeur
+
+    La transaction est enregistrée en base de données dans tous les cas.
+
+    :param acheteur: instance de Acheteur soumettant l'offre
+    :param article: instance de Article sur lequel porte l'offre
+    :param prix_acheteur: prix proposé par l'acheteur (en euros)
+    :return: statut de la transaction ('acceptee', 'negociation' ou 'refusee')
+    """
     prix_min = article.prix_min   #prix minimum auquel le vendeur peut vendre son article s'il y a négociation
     prix_vendeur = article.prix_vendeur  #prix affiché sur le site, prix auquel le vendeur veut vendre son article
 

@@ -1,6 +1,18 @@
 """ ----------- Author : LARDILLIER Léo ------------- """
+
+from typing import Optional
+
 class Plateforme:
-    def __init__(self):
+    """
+    Contrôleur central de la marketplace ENSTADUSTYLE.
+    Gère les utilisateurs, le catalogue d'articles et les transactions.
+    Sert de point d'entrée pour toutes les opérations de la plateforme.
+    """
+
+    def __init__(self) -> None:
+        """
+        Initialise une plateforme vide avec des listes d'utilisateurs, d'articles et de transactions.
+        """
         self.utilisateurs = []    # composition
         self.articles = []        # composition
         self.transactions = []    # composition
@@ -14,22 +26,28 @@ class Plateforme:
                     self.authentifie = True
         self.authentifie = False
     """
-    def creer_utilisateur(self, pseudo, nom, prenom, mail, mot_de_passe, est_pro=False, evaluation=0, localisation=None, date_inscription=None):
-        '''
-        :param pseudo:
-        :param nom:
-        :param prenom:
-        :param mail:
-        :param mot_de_passe:
-        :param est_pro:
-        :param evaluation:
-        :param localisation:
-        :param date_inscription:
-        :return:
-        '''
+
+    def creer_utilisateur(self, pseudo: str, nom: str, prenom: str, mail: str,
+                          mot_de_passe: str, est_pro: bool = False, evaluation: float = 0,
+                          localisation: Optional[str] = None,
+                          date_inscription: Optional[str] = None) -> bool:
+        """
+        Crée un nouvel utilisateur, vérifie l'unicité du pseudo et l'enregistre en base de données.
+
+        :param pseudo: nom d'utilisateur unique
+        :param nom: nom de famille
+        :param prenom: prénom
+        :param mail: adresse e-mail
+        :param mot_de_passe: mot de passe (non hashé)
+        :param est_pro: True si l'utilisateur est un vendeur professionnel (défaut : False)
+        :param evaluation: note de départ attribuée (défaut : 0)
+        :param localisation: ville ou région de l'utilisateur (optionnel)
+        :param date_inscription: date d'inscription (optionnel, None par défaut)
+        :return: True si l'utilisateur a été créé, False si le pseudo est déjà utilisé
+        """
         for user in self.utilisateurs:
             if pseudo == user.pseudo:
-                print('blabla')
+                print('Pseudonyme déjà utilisé, veuillez en choisir un autre.')
                 return False
         from models.utilisateur import Utilisateur
         from db.db import insert_utilisateur
@@ -40,11 +58,13 @@ class Plateforme:
         self.utilisateurs.append(new_user)
         return True
 
+    def charger_depuis_bdd(self) -> bool:
+        """
+        Charge l'ensemble des utilisateurs et des articles depuis la base de données SQLite.
+        Peuple les listes self.utilisateurs et self.articles en mémoire.
 
-
-    def charger_depuis_bdd(self):
-        # Charge les utilisateurs et articles depuis marche.db
-        # Utilise get_all_utilisateurs() et get_all_articles()
+        :return: True une fois le chargement effectué
+        """
         from db.db import get_all_utilisateurs, get_all_articles
         from models.utilisateur import Utilisateur
         from models.article import Vetement
@@ -55,36 +75,62 @@ class Plateforme:
         #manque un get_all_transactions ??
         return True
 
-    def trouver_utilisateur(self, pseudo):
+    def trouver_utilisateur(self, pseudo: str) -> Optional["Utilisateur"]:
+        """
+        Recherche un utilisateur par son pseudo dans la liste en mémoire.
+
+        :param pseudo: nom d'utilisateur à rechercher
+        :return: instance de Utilisateur si trouvé, None sinon
+        """
         for user in self.utilisateurs:
             if pseudo == user.pseudo:
                 return user
         return None
 
-    def ajouter_article(self, article): #Fonction inutile car déjà dans models vendeur ?
+    def ajouter_article(self, article: "Article") -> bool:
+        """
+        Ajoute un article au catalogue de la plateforme s'il n'y est pas déjà.
+
+        :param article: instance de Article ou Vetement à ajouter
+        :return: True si l'article a été ajouté, False s'il était déjà présent
+        """
         if article not in self.articles:
             self.articles.append(article)
             return True
         return False
 
-    def afficher_catalogue(self):
+    def afficher_catalogue(self) -> None:
+        """
+        Affiche dans la console tous les articles du catalogue avec leur prix et statut de vente.
+        """
         for a in self.articles:
             if not a.vendu:
                 print(f"{a.nom} — {a.prix_vendeur}€ ({a.sous_categorie})")
             else:
                 print(f"{a.nom} — {a.prix_vendeur}€ ({a.sous_categorie}) — Vendu")
-    #Je me suis rendu compte qu'on utilisait que des utilisateurs mais qu'on avait besoin d'acheteur et de vendeur
-    #Le problème c'est que tout le monde est à la fois acheteur et vendeur, mais on ne peut pas instancier
-    #Un utilisateur, vendeur, acheteur sous la même bannière
-    #Donc on charge tout le monde en utilisateur, puis on les transforment en acheteur/vendeur au bon moment
-    def en_tant_que_acheteur(self, utilisateur):
+
+    def en_tant_que_acheteur(self, utilisateur: "Utilisateur") -> "Acheteur":
+        """
+        Convertit un Utilisateur en instance Acheteur pour accéder aux fonctionnalités d'achat.
+        Tous les utilisateurs sont chargés comme Utilisateur de base, puis convertis au besoin.
+
+        :param utilisateur: instance de Utilisateur à convertir
+        :return: instance de Acheteur avec les mêmes données que l'utilisateur
+        """
         from models.utilisateur import Acheteur
         return Acheteur(utilisateur.id, utilisateur.pseudo, utilisateur.nom,
                         utilisateur.prenom, utilisateur.mail, utilisateur.mot_de_passe,
                         utilisateur.est_pro, utilisateur.evaluation,
                         utilisateur.localisation, utilisateur.date_inscription)
 
-    def en_tant_que_vendeur(self, utilisateur):
+    def en_tant_que_vendeur(self, utilisateur: "Utilisateur") -> "Vendeur":
+        """
+        Convertit un Utilisateur en instance Vendeur et charge ses articles existants.
+        Tous les utilisateurs sont chargés comme Utilisateur de base, puis convertis au besoin.
+
+        :param utilisateur: instance de Utilisateur à convertir
+        :return: instance de Vendeur avec les mêmes données que l'utilisateur et ses articles chargés
+        """
         from models.utilisateur import Vendeur
         vendeur = Vendeur(utilisateur.id, utilisateur.pseudo, utilisateur.nom,
                           utilisateur.prenom, utilisateur.mail, utilisateur.mot_de_passe,
@@ -97,4 +143,3 @@ class Plateforme:
                 vendeur.liste_article.append(article)
 
         return vendeur
-

@@ -62,11 +62,10 @@ if __name__ == '__main__':
 
 #Etape 3 : Bob le met en vente
 
-print("Article mis en vente ?", bob_vendeur.mettre_en_vente(nouveau_article))
-# Ajout au catalogue de la plateforme
-p.ajouter_article(nouveau_article)
-
-# Vérification
-print(f"\nNouvel article : {nouveau_article.nom} — {nouveau_article.prix_vendeur}€")
-vendu, en_vente = bob_vendeur.mes_articles()
-print(f"Articles de Bob : {len(en_vente)} en vente, {len(vendu)} vendus")
+    print("Article mis en vente ?", bob_vendeur.mettre_en_vente(nouveau_article))
+    # Ajout au catalogue de la plateforme
+    p.ajouter_article(nouveau_article)
+    # Vérification
+    print(f"\nNouvel article : {nouveau_article.nom} — {nouveau_article.prix_vendeur}€")
+    vendu, en_vente = bob_vendeur.mes_articles()
+    print(f"Articles de Bob : {len(en_vente)} en vente, {len(vendu)} vendus")
