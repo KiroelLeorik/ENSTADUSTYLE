@@ -25,20 +25,20 @@ if __name__ == '__main__':
     # Simuler 100 000 articles
     gros_vetements = vetements * 5000  # 20 × 5000 = 100 000 articles
 
-    start = time.time()
+    start = time.time()   #on calcule le temps que met la fonction scorer_articles pour scorer 10000 vêtements selon les critères imposés
     for _ in range(10):
         scorer_articles(gros_vetements, criteres)
     temps_numpy = time.time() - start
     print(f"NumPy (100k articles) : {temps_numpy:.4f}s")
 
-    start = time.time()
+    start = time.time() #on calcule le temps que met la fonction rechercher pour rechercher les produits qui correspondent aux critères parmis 10000 vêtements
     for _ in range(10):
         rechercher(gros_vetements, criteres)
     temps_python = time.time() - start
     print(f"Python (100k articles) : {temps_python:.4f}s")
 
     start = time.time()
-    for _ in range(10):
+    for _ in range(10):    #on calcule le temps que met la fonction scorer_articles_python pour scorer 10000 vêtements selon les critères imposés
         scorer_articles_python(gros_vetements, criteres)
     temps = time.time() - start
     print(f"Scorer Python : {temps:.4f}s")
