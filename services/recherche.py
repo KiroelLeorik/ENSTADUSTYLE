@@ -9,6 +9,7 @@ def scorer_articles(articles: list, criteres: dict) -> Union[List[Tuple], List]:
     Classe les articles disponibles par pertinence par rapport aux critères fournis,
     en utilisant un scoring vectoriel NumPy.
     Chaque critère a le même poids (1/n). Les articles vendus sont exclus des résultats.
+    Cette fonction sera utile pour trier les articles en fonctions de filtres par exemple
 
     :param articles: liste d'instances de Article ou Vetement
     :param criteres: dictionnaire de filtres (ex. {'taille': 'M', 'couleur': 'Bleu'})

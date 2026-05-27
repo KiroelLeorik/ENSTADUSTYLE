@@ -1,3 +1,4 @@
+
 """ ----------- Author : LARDILLIER Léo -------------
 
 Ce main représente la console à partir de laquelle toutes les opérations sont effectuées.
@@ -69,3 +70,5 @@ if __name__ == '__main__':
     print(f"\nNouvel article : {nouveau_article.nom} — {nouveau_article.prix_vendeur}€")
     vendu, en_vente = bob_vendeur.mes_articles()
     print(f"Articles de Bob : {len(en_vente)} en vente, {len(vendu)} vendus")
+
+

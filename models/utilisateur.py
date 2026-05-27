@@ -146,7 +146,21 @@ class Vendeur(Utilisateur):
         :param date_inscription: date d'inscription sur la plateforme
         """
         super().__init__(id, pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation, date_inscription)
-        self.liste_article = []
+        self.liste_article = self._charger_articles()
+        
+    def _charger_articles(self):
+        """
+        Charge les articles du vendeur depuis la base de données.
+
+        :return: liste des articles du vendeur
+        """
+        from db.db import get_all_articles
+        from models.article import Vetement
+        articles = []
+        for a in get_all_articles():
+            if a[7] == self.id:  # id_vendeur est à l'index 7
+                articles.append(Vetement(*a))
+        return articles
 
     def mettre_en_vente(self, article: "Article") -> bool:
         """
@@ -220,7 +234,18 @@ class Acheteur(Utilisateur):
         :param date_inscription: date d'inscription sur la plateforme
         """
         super().__init__(id, pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation, date_inscription)
-        self.favoris = []  # composition — liste d'articles favoris
+        self.favoris = self._charger_favoris()
+
+    def _charger_favoris(self):
+        from db.db import get_favoris, get_article_by_id
+        from models.article import Vetement
+        favoris = []
+        for favori in get_favoris(self.id):
+            id_objet = favori[2]
+            article = get_article_by_id(id_objet)
+            if article:
+                favoris.append(Vetement(*article))
+        return favoris
 
     def faire_offre(self, article: "Article", prix_propose: float) -> str:
         """
@@ -253,11 +278,12 @@ class Acheteur(Utilisateur):
         """
         if article not in self.favoris:
             self.favoris.append(article)
+            from db.db import insert_favori
+            insert_favori(self.id, article.id)
             return True
         else:
             print("L'article est déjà dans vos favoris !")
             return False
-        # Incomplet, manque la persistance BDD
 
     def retirer_favori(self, article: "Article") -> bool:
         """
@@ -268,8 +294,9 @@ class Acheteur(Utilisateur):
         """
         if article in self.favoris:
             self.favoris.remove(article)
+            from db.db import delete_favori
+            delete_favori(self.id, article.id)
             return True
         else:
             print("L'article n'est pas dans vos favoris !")
             return False
-        # Incomplet, manque la persistance BDD

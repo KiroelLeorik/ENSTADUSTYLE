@@ -136,10 +136,4 @@ class Plateforme:
                           utilisateur.prenom, utilisateur.mail, utilisateur.mot_de_passe,
                           utilisateur.est_pro, utilisateur.evaluation,
                           utilisateur.localisation, utilisateur.date_inscription)
-
-        # Charger ses articles existants
-        for article in self.articles:
-            if article.id_vendeur == utilisateur.id:
-                vendeur.liste_article.append(article)
-
         return vendeur

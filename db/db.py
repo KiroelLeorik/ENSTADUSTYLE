@@ -160,3 +160,25 @@ if __name__ == "__main__":
     print(get_all_utilisateurs())
     print(get_utilisateur_by_id(1))
     print(get_article_by_id(1))
+
+def insert_favori(id_utilisateur, id_objet):
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('INSERT INTO Favoris (id_utilisateur, id_objet) VALUES (?, ?)', (id_utilisateur, id_objet))
+    conn.commit()
+    conn.close()
+
+def delete_favori(id_utilisateur, id_objet):
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('DELETE FROM Favoris WHERE id_utilisateur = ? AND id_objet = ?', (id_utilisateur, id_objet))
+    conn.commit()
+    conn.close()
+
+def get_favoris(id_utilisateur):
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('SELECT * FROM Favoris WHERE id_utilisateur = ?', (id_utilisateur,))
+    resultat = c.fetchall()
+    conn.close()
+    return resultat
