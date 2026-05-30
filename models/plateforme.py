@@ -1,8 +1,8 @@
 """ ----------- Author : LARDILLIER Léo ------------- """
 
 from typing import Optional
-
-class Plateforme:
+from services.observer import Observable, Observateur
+class Plateforme(Observable):
     """
     Contrôleur central de la marketplace ENSTADUSTYLE.
     Gère les utilisateurs, le catalogue d'articles et les transactions.
@@ -13,6 +13,7 @@ class Plateforme:
         """
         Initialise une plateforme vide avec des listes d'utilisateurs, d'articles et de transactions.
         """
+        super().__init__()        # Initialise self.observateur par composition
         self.utilisateurs = []    # composition
         self.articles = []        # composition
         self.transactions = []    # composition
@@ -65,7 +66,7 @@ class Plateforme:
 
         :return: True une fois le chargement effectué
         """
-        from db.db import get_all_utilisateurs, get_all_articles
+        from db.db import get_all_utilisateurs, get_all_articles, get_all_abonnements_notif
         from models.utilisateur import Utilisateur
         from models.article import Vetement
         utilisateurs_bdd = get_all_utilisateurs()
@@ -73,6 +74,14 @@ class Plateforme:
         articles_bdd = get_all_articles()
         self.articles = [Vetement(*a) for a in articles_bdd]
         #manque un get_all_transactions ??
+        for obs in get_all_abonnements_notif():
+            id_user = obs[1]
+            criteres = obs[2]
+            user = self.trouver_utilisateur(id_user)
+            if user:
+                acheteur = self.en_tant_que_acheteur(user)
+                observateur = Observateur(acheteur, criteres)
+                self._observateurs.append(observateur)
         return True
 
     def trouver_utilisateur(self, pseudo: str) -> Optional["Utilisateur"]:
@@ -87,6 +96,12 @@ class Plateforme:
                 return user
         return None
 
+    def trouver_utilisateur_id(self, id):
+        for user in self.utilisateurs:
+            if id == user.id:
+                return user
+        return None
+
     def ajouter_article(self, article: "Article") -> bool:
         """
         Ajoute un article au catalogue de la plateforme s'il n'y est pas déjà.
@@ -96,6 +111,7 @@ class Plateforme:
         """
         if article not in self.articles:
             self.articles.append(article)
+            self.notifier(article)
             return True
         return False
 

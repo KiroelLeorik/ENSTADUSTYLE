@@ -182,3 +182,42 @@ def get_favoris(id_utilisateur):
     resultat = c.fetchall()
     conn.close()
     return resultat
+
+def insert_abonnement_notif(id_acheteur, criteres):
+    import json
+    criterias = json.dumps(criteres)
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('INSERT INTO Abonnements_notifications (id_acheteur, criteres) VALUES (?, ?)', (id_acheteur, criterias))
+    conn.commit()
+    conn.close()
+
+def delete_abonnement_notif(id_acheteur, criteres):
+    import json
+    criterias = json.dumps(criteres)
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('DELETE FROM Abonnements_notifications WHERE id_acheteur = ? AND criteres = ?', (id_acheteur, criterias))
+    conn.commit()
+    conn.close()
+
+def get_all_abonnements_notif():
+    import json
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('SELECT * FROM Abonnements_notifications')
+    resultat = c.fetchall()
+    conn.close()
+    return [[r[0], r[1], json.loads(r[2]), r[3]] for r in resultat]
+
+def get_abonnements_notif(id_acheteur):
+    import json
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('SELECT * FROM Abonnements_notifications WHERE id_acheteur = ?', (id_acheteur,))
+    resultat = c.fetchall()
+    conn.close()
+    resultat_json = []
+    for r in resultat:
+        resultat_json.append([r[0], r[1], json.loads(r[2]), r[3]])
+    return resultat_json
