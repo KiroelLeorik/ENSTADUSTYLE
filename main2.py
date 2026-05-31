@@ -7,7 +7,7 @@ p.charger_depuis_bdd()
 
 
 def test_recommandation(p):
-    alice = p.trouver_utilisateur("alice92")
+    alice = p.authentifier_utilisateur("alice92", "alice1234")
     alice_acheteur = p.en_tant_que_acheteur(alice)
 
     print(f"Favoris d'Alice ({len(alice_acheteur.favoris)}) :")
@@ -25,16 +25,18 @@ def test_recommandation(p):
 def test_observer(p):
     from services.observer import Observateur
     from models.article import Vetement
-    alice = p.trouver_utilisateur("alice92")
-    bob = p.trouver_utilisateur("bob_style")
+    alice = p.authentifier_utilisateur("alice92", "alice1234")
     alice_acheteur = p.en_tant_que_acheteur(alice)
-    bob_vendeur = p.en_tant_que_vendeur(bob)
+    p.deconnecter_utilisateur()
+
     obs = Observateur(alice_acheteur, {"taille": "M", "couleur": "Bleu"})
     p.abonner(obs)
 
+    bob = p.authentifier_utilisateur("bob_style", 'bobstyle99')
+    bob_vendeur = p.en_tant_que_vendeur(bob)
     # Quand Bob met un article en vente
     nouveau_article = Vetement(
-        id=21,
+        id=None,
         nom="Manteau en laine d'alpaga",
         description="Manteau de qualité exceptionnelle",
         categorie="Vêtements",
@@ -52,6 +54,8 @@ def test_observer(p):
         marque="The North Face",
         matiere="Nylon"
     )
+    bob_vendeur.mettre_en_vente(nouveau_article)
+    p.deconnecter_utilisateur()
     p.ajouter_article(nouveau_article)  # → doit déclencher la notification pour Alice
 test_observer(p)
 for k in p._observateurs:

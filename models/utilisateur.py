@@ -172,13 +172,15 @@ class Vendeur(Utilisateur):
         if article.vendu:
             print("L'article est déjà vendu !")
             return False
-        elif article in self.liste_article:
+        elif any(a.id == article.id for a in self.liste_article):
             print("L'article est déjà en vente !")
             return False
         else:
             self.liste_article.append(article)
             from db.db import insert_article
-            insert_article(article.nom, article.description, article.categorie, article.sous_categorie, article.genre, article.taille, article.couleur, article.marque, article.etat, article.prix_vendeur, article.prix_min, article.id_vendeur, article.photo, article.matiere)
+            article.id = insert_article(article.nom, article.description, article.categorie, article.sous_categorie, article.genre, article.taille, article.couleur, article.marque, article.etat, article.prix_vendeur, article.prix_min, article.id_vendeur, article.photo, article.matiere)
+            #Super puissant, car il met à jour la BD avec la fonction insert_article
+            #Mais il met directement à jour la plateforme via article.id = 
             return True
 
     def retirer_article(self, article: "Article") -> bool:

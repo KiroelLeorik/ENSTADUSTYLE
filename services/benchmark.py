@@ -16,7 +16,7 @@ if __name__ == '__main__':
     for _ in range(10):
         rechercher(gros_vetements, criteres)
     temps_python = time.time() - start
-    print(f"Python (100k articles) : {temps_python:.4f}s")
+    print(f"Fonction Rechercher (100k articles) : {temps_python:.4f}s")
 
     start = time.time()
     for _ in range(10):    #on calcule le temps que met la fonction scorer_articles_python pour scorer 10000 vêtements selon les critères imposés

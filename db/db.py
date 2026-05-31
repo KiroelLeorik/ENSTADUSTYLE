@@ -121,8 +121,10 @@ def insert_article(nom: str, description: str, categorie: str, sous_categorie: O
     c = conn.cursor()
     c.execute('INSERT INTO Objets (nom, description, categorie, sous_categorie, genre, taille, couleur, marque, etat, prix_vendeur, prix_min, id_vendeur, photo, matiere) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
               (nom, description, categorie, sous_categorie, genre, taille, couleur, marque, etat, prix_vendeur, prix_min, id_vendeur, photo, matiere))
+    new_id = c.lastrowid
     conn.commit()
     conn.close()
+    return new_id
     #Remarque, pas besoin de date_de_publication car il y a un timestamp d'autoincrémenter
 
 def update_article_vendu(id_objet: int) -> None:

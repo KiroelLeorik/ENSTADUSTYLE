@@ -17,16 +17,59 @@ class Plateforme(Observable):
         self.utilisateurs = []    # composition
         self.articles = []        # composition
         self.transactions = []    # composition
-        #self.authentifie = False #to do
-    """
-    TODO
+        self.utilisateur_courant = None #Authentification
+
+    def charger_depuis_bdd(self) -> bool:
+        """
+        Charge l'ensemble des utilisateurs et des articles depuis la base de données SQLite.
+        Peuple les listes self.utilisateurs et self.articles en mémoire.
+
+        :return: True une fois le chargement effectué
+        """
+        self.utilisateur_courant = "admin" #Permet de passer l'authent
+        from db.db import get_all_utilisateurs, get_all_articles, get_all_abonnements_notif
+        from models.utilisateur import Utilisateur
+        from models.article import Vetement
+        utilisateurs_bdd = get_all_utilisateurs()
+        self.utilisateurs = [Utilisateur(*u) for u in utilisateurs_bdd]
+        articles_bdd = get_all_articles()
+        self.articles = [Vetement(*a) for a in articles_bdd]
+        #manque un get_all_transactions ??
+        for obs in get_all_abonnements_notif():
+            id_user = obs[1]
+            criteres = obs[2]
+            user = self.trouver_utilisateur_id(id_user)
+            if user:
+                acheteur = self.en_tant_que_acheteur(user)
+                observateur = Observateur(acheteur, criteres)
+                self._observateurs.append(observateur)
+        self.utilisateur_courant = None
+        return True
+
+
     def authentifier_utilisateur(self, log, password):
         for user in self.utilisateurs:
             if log == user.pseudo:
-                if password == user.password:
-                    self.authentifie = True
-        self.authentifie = False
-    """
+                if password == user.mot_de_passe:
+                    self.utilisateur_courant = user
+                    print("Vous êtes connecté en tant que " + user.pseudo + ".")
+                    return(self.trouver_utilisateur(log))
+        self.utilisateur_courant = None
+        return("Pseudo ou mot de passe incorrect.")
+
+    def need_auth(func):
+        def wrapper(self, *args, **kwargs):
+            if self.utilisateur_courant is None:
+                print("Vous devez être connecté !")
+                return False
+            return func(self, *args, **kwargs)
+        return wrapper
+
+    @need_auth
+    def deconnecter_utilisateur(self):
+        self.utilisateur_courant = None
+        return("Vous êtes déconnecté.")
+
 
     def creer_utilisateur(self, pseudo: str, nom: str, prenom: str, mail: str,
                           mot_de_passe: str, est_pro: bool = False, evaluation: float = 0,
@@ -59,31 +102,6 @@ class Plateforme(Observable):
         self.utilisateurs.append(new_user)
         return True
 
-    def charger_depuis_bdd(self) -> bool:
-        """
-        Charge l'ensemble des utilisateurs et des articles depuis la base de données SQLite.
-        Peuple les listes self.utilisateurs et self.articles en mémoire.
-
-        :return: True une fois le chargement effectué
-        """
-        from db.db import get_all_utilisateurs, get_all_articles, get_all_abonnements_notif
-        from models.utilisateur import Utilisateur
-        from models.article import Vetement
-        utilisateurs_bdd = get_all_utilisateurs()
-        self.utilisateurs = [Utilisateur(*u) for u in utilisateurs_bdd]
-        articles_bdd = get_all_articles()
-        self.articles = [Vetement(*a) for a in articles_bdd]
-        #manque un get_all_transactions ??
-        for obs in get_all_abonnements_notif():
-            id_user = obs[1]
-            criteres = obs[2]
-            user = self.trouver_utilisateur(id_user)
-            if user:
-                acheteur = self.en_tant_que_acheteur(user)
-                observateur = Observateur(acheteur, criteres)
-                self._observateurs.append(observateur)
-        return True
-
     def trouver_utilisateur(self, pseudo: str) -> Optional["Utilisateur"]:
         """
         Recherche un utilisateur par son pseudo dans la liste en mémoire.
@@ -102,6 +120,7 @@ class Plateforme(Observable):
                 return user
         return None
 
+    @need_auth
     def ajouter_article(self, article: "Article") -> bool:
         """
         Ajoute un article au catalogue de la plateforme s'il n'y est pas déjà.
@@ -139,6 +158,7 @@ class Plateforme(Observable):
                         utilisateur.est_pro, utilisateur.evaluation,
                         utilisateur.localisation, utilisateur.date_inscription)
 
+    @need_auth
     def en_tant_que_vendeur(self, utilisateur: "Utilisateur") -> "Vendeur":
         """
         Convertit un Utilisateur en instance Vendeur et charge ses articles existants.
