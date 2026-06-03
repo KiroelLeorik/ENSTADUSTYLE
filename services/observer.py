@@ -3,10 +3,10 @@ from services.recherche import rechercher
 
 class Observateur:
     """Interface que chaque acheteur devra implémenter"""
-    def __init__(self, acheteur, criteres):
+    def __init__(self, acheteur, criteres, plateforme=None):
         self.acheteur = acheteur
         self.criteres = criteres
-
+        self.plateforme = plateforme
     def update(self, article):
         resultat = rechercher([article], self.criteres)
         if resultat:
@@ -14,6 +14,8 @@ class Observateur:
             # Plus tard : signal PyQt5, popup, badge...
             print(f"[NOTIFICATION] {self.acheteur.pseudo} : "
                   f"'{article.nom}' correspond à vos critères !")
+            if self.plateforme:
+                self.plateforme.notifications.append(article)
             #On peut imaginer qu'on envoi un mail aussi !
 
 class Observable:

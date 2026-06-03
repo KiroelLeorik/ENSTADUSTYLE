@@ -18,6 +18,7 @@ class Plateforme(Observable):
         self.articles = []        # composition
         self.transactions = []    # composition
         self.utilisateur_courant = None #Authentification
+        self.notifications = []
 
     def charger_depuis_bdd(self) -> bool:
         """
@@ -41,7 +42,7 @@ class Plateforme(Observable):
             user = self.trouver_utilisateur_id(id_user)
             if user:
                 acheteur = self.en_tant_que_acheteur(user)
-                observateur = Observateur(acheteur, criteres)
+                observateur = Observateur(acheteur, criteres, plateforme=self)
                 self._observateurs.append(observateur)
         self.utilisateur_courant = None
         return True
@@ -55,7 +56,8 @@ class Plateforme(Observable):
                     print("Vous êtes connecté en tant que " + user.pseudo + ".")
                     return(self.trouver_utilisateur(log))
         self.utilisateur_courant = None
-        return("Pseudo ou mot de passe incorrect.")
+        print('Identifiants incorrects.')
+        return None
 
     def need_auth(func):
         def wrapper(self, *args, **kwargs):

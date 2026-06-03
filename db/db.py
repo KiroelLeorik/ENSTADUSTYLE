@@ -223,3 +223,22 @@ def get_abonnements_notif(id_acheteur):
     for r in resultat:
         resultat_json.append([r[0], r[1], json.loads(r[2]), r[3]])
     return resultat_json
+
+def get_nb_abonnes(id_utilisateur):
+    """Retourne le nombre de personnes qui suivent cet utilisateur."""
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('SELECT COUNT(*) FROM Abonnements WHERE id_suivi = ?', (id_utilisateur,))
+    result = c.fetchone()[0]
+    conn.close()
+    return result
+
+def get_nb_abonnements(id_utilisateur):
+    """Retourne le nombre de personnes que cet utilisateur suit."""
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('SELECT COUNT(*) FROM Abonnements WHERE id_abonne = ?', (id_utilisateur,))
+    result = c.fetchone()[0]
+    conn.close()
+    return result
+

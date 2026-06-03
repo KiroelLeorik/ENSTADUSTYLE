@@ -29,7 +29,7 @@ def test_observer(p):
     alice_acheteur = p.en_tant_que_acheteur(alice)
     p.deconnecter_utilisateur()
 
-    obs = Observateur(alice_acheteur, {"taille": "M", "couleur": "Bleu"})
+    obs = Observateur(alice_acheteur, {"taille": "M", "couleur": "Bleu"}, plateforme=p)
     p.abonner(obs)
 
     bob = p.authentifier_utilisateur("bob_style", 'bobstyle99')
@@ -55,8 +55,8 @@ def test_observer(p):
         matiere="Nylon"
     )
     bob_vendeur.mettre_en_vente(nouveau_article)
-    p.deconnecter_utilisateur()
     p.ajouter_article(nouveau_article)  # → doit déclencher la notification pour Alice
+    p.deconnecter_utilisateur()
 test_observer(p)
 for k in p._observateurs:
     print(k.acheteur.pseudo, k.criteres)
