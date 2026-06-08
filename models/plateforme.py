@@ -28,7 +28,8 @@ class Plateforme(Observable):
         :return: True une fois le chargement effectué
         """
         self.utilisateur_courant = "admin" #Permet de passer l'authent
-        from db.db import get_all_utilisateurs, get_all_articles, get_all_abonnements_notif
+        from db.db import get_all_utilisateurs, get_all_articles, get_all_abonnements_notif, migrer_photo_utilisateur
+        migrer_photo_utilisateur()
         from models.utilisateur import Utilisateur
         from models.article import Vetement
         utilisateurs_bdd = get_all_utilisateurs()
@@ -158,7 +159,8 @@ class Plateforme(Observable):
         return Acheteur(utilisateur.id, utilisateur.pseudo, utilisateur.nom,
                         utilisateur.prenom, utilisateur.mail, utilisateur.mot_de_passe,
                         utilisateur.est_pro, utilisateur.evaluation,
-                        utilisateur.localisation, utilisateur.date_inscription)
+                        utilisateur.localisation, utilisateur.date_inscription,
+                        getattr(utilisateur, 'photo', None))
 
     @need_auth
     def en_tant_que_vendeur(self, utilisateur: "Utilisateur") -> "Vendeur":
@@ -173,5 +175,6 @@ class Plateforme(Observable):
         vendeur = Vendeur(utilisateur.id, utilisateur.pseudo, utilisateur.nom,
                           utilisateur.prenom, utilisateur.mail, utilisateur.mot_de_passe,
                           utilisateur.est_pro, utilisateur.evaluation,
-                          utilisateur.localisation, utilisateur.date_inscription)
+                          utilisateur.localisation, utilisateur.date_inscription,
+                          getattr(utilisateur, 'photo', None))
         return vendeur

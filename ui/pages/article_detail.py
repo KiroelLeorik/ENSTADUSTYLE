@@ -34,6 +34,7 @@ class ArticleDetailPage(QWidget):
         self.photo.setFixedSize(320, 380)
         self.photo.setAlignment(Qt.AlignCenter)
         self.photo.setStyleSheet(photo_placeholder_style() + " font-size: 80px;")
+        self.photo.setScaledContents(False)
         left.addWidget(self.photo)
         left.addStretch()
         layout.addLayout(left)
@@ -92,10 +93,10 @@ class ArticleDetailPage(QWidget):
         btns = QVBoxLayout()
         btns.setSpacing(12)
 
-        self.btn_favoris = QPushButton("FAVORIS")
+        self.btn_favoris = QPushButton("+ FAVORIS")
         self.btn_favoris.setStyleSheet(btn_accent_style())
         self.btn_favoris.setFixedWidth(180)
-        self.btn_favoris.clicked.connect(self._ajouter_favori)
+        self.btn_favoris.clicked.connect(self._toggle_favori)
         btns.addWidget(self.btn_favoris)
 
         self.btn_acheter = QPushButton("ACHETER")
@@ -110,6 +111,15 @@ class ArticleDetailPage(QWidget):
     def set_article(self, article):
         """Met à jour la page avec les données de l'article."""
         self.article = article
+        pix = charger_pixmap(getattr(article, 'photo', None), 320, 380)
+        if pix:
+            self.photo.setPixmap(pix)
+            self.photo.setText("")
+            self.photo.setStyleSheet("")
+        else:
+            self.photo.clear()
+            self.photo.setText("📷")
+            self.photo.setStyleSheet(photo_placeholder_style() + " font-size: 80px;")
         self.label_nom.setText(article.nom.upper())
         self.label_desc.setText(article.description or "")
         self.champs["taille"].setText(getattr(article, "taille", "-") or "-")
@@ -126,20 +136,38 @@ class ArticleDetailPage(QWidget):
         else:
             self.btn_vendeur.setText("@vendeur inconnu")
 
+        acheteur = self.plateforme.en_tant_que_acheteur(self.utilisateur)
+        deja = any(a.id == article.id for a in acheteur.favoris)
+        self.btn_favoris.setText("♥ FAVORIS" if deja else "+ FAVORIS")
+
+        if article.vendu:
+            self.btn_acheter.setText("VENDU")
+            self.btn_acheter.setEnabled(False)
+        else:
+            self.btn_acheter.setText("ACHETER")
+            self.btn_acheter.setEnabled(True)
+
     def _voir_vendeur(self):
         if self._vendeur:
             self.vendeur_clique.emit(self._vendeur)
 
-    def _ajouter_favori(self):
-        if self.article:
-            acheteur = self.plateforme.en_tant_que_acheteur(self.utilisateur)
-            if acheteur.ajouter_favori(self.article):
-                QMessageBox.information(self, "Favoris", f"'{self.article.nom}' ajouté aux favoris !")
-            else:
-                QMessageBox.warning(self, "Favoris", "Article déjà dans vos favoris.")
+    def _toggle_favori(self):
+        if not self.article:
+            return
+        acheteur = self.plateforme.en_tant_que_acheteur(self.utilisateur)
+        deja = any(a.id == self.article.id for a in acheteur.favoris)
+        if deja:
+            acheteur.retirer_favori(self.article)
+            self.btn_favoris.setText("+ FAVORIS")
+        else:
+            acheteur.ajouter_favori(self.article)
+            self.btn_favoris.setText("♥ FAVORIS")
 
     def _faire_offre(self):
         if not self.article:
+            return
+        if self.article.vendu:
+            QMessageBox.warning(self, "Indisponible", "Cet article a déjà été vendu.")
             return
         prix, ok = QInputDialog.getDouble(
             self, "Faire une offre",
@@ -151,8 +179,11 @@ class ArticleDetailPage(QWidget):
             acheteur = self.plateforme.en_tant_que_acheteur(self.utilisateur)
             statut = proposer_achat(acheteur, self.article, prix)
             messages = {
-                "acceptee": "✅ Offre acceptée ! L'article vous appartient.",
-                "negociation": "🤝 Négociation proposée. Le vendeur va vous contacter.",
-                "refusee": "❌ Offre refusée. Essayez un prix plus élevé."
+                "acceptee": "Offre acceptée ! L'article vous appartient.",
+                "negociation": "Négociation proposée. Le vendeur va vous contacter.",
+                "refusee": "Offre refusée. Essayez un prix plus élevé."
             }
             QMessageBox.information(self, "Résultat de l'offre", messages.get(statut, statut))
+            if statut == "acceptee":
+                self.btn_acheter.setText("VENDU")
+                self.btn_acheter.setEnabled(False)

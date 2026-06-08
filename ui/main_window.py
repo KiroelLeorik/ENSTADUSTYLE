@@ -12,6 +12,8 @@ class Sidebar(QWidget):
     def __init__(self, parent=None):
         super().__init__(parent)
         self.setFixedWidth(210)
+        self.setAttribute(Qt.WA_StyledBackground, True)
+        self.setAutoFillBackground(True)
         self.setStyleSheet(f"background-color: {SIDEBAR_COLOR};")
         self.btns = {}
         self._init_ui()
@@ -23,7 +25,7 @@ class Sidebar(QWidget):
         layout.setSpacing(5)
         layout.setAlignment(Qt.AlignTop)
 
-        for item in ["profil", "messagerie", "filtres", "fil d'actu", "favoris", "panier", "vendre"]:
+        for item in ["profil", "messagerie", "filtres", "pour vous", "favoris", "vendre"]:
             btn = QPushButton(item)
             btn.setStyleSheet(sidebar_btn_style())
             self.btns[item] = btn
@@ -95,6 +97,11 @@ class MainWindow(QMainWindow):
         self.sidebar = Sidebar(self)
         self.sidebar.raise_()
 
+        self.overlay = QWidget(self)
+        self.overlay.setStyleSheet("background-color: rgba(0, 0, 0, 0);")
+        self.overlay.hide()
+        self.overlay.mousePressEvent = lambda e: self._toggle_sidebar()
+
     def _charger_pages(self):
         # Juste la page d'accueil au démarrage
         from ui.pages.accueil import AccueilPage
@@ -123,11 +130,11 @@ class MainWindow(QMainWindow):
             "catalogue": lambda: CataloguePage(self.plateforme),
             "profil": lambda: ProfilPage(self.plateforme, self.utilisateur),
             "favoris": lambda: FavorisPage(self.plateforme, self.utilisateur),
-            "filtres": lambda: FiltresPage(self.plateforme),
+            "filtres": lambda: FiltresPage(self.plateforme, self.utilisateur),
             "vendre": lambda: VendrePage(self.plateforme, self.utilisateur),
-            "notifications": lambda: NotificationsPage(self.plateforme),
+            "notifications": lambda: NotificationsPage(self.plateforme, self.utilisateur),
             "article_detail": lambda: ArticleDetailPage(self.plateforme, self.utilisateur),
-            "vendeur_profil": lambda: VendeurProfilPage(self.plateforme),
+            "vendeur_profil": lambda: VendeurProfilPage(self.plateforme, self.utilisateur),
         }
 
         if nom in pages_map:
@@ -139,6 +146,8 @@ class MainWindow(QMainWindow):
     def _connecter_signaux(self, nom):
         if nom == "catalogue":
             self.pages["catalogue"].article_clique.connect(self._ouvrir_article)
+        elif nom == "profil":
+            self.pages["profil"].article_clique.connect(self._ouvrir_article)
         elif nom == "favoris":
             self.pages["favoris"].article_clique.connect(self._ouvrir_article)
         elif nom == "article_detail":
@@ -154,7 +163,7 @@ class MainWindow(QMainWindow):
     def _connecter_sidebar(self):
         mapping = {
             "profil": "profil",
-            "fil d'actu": "catalogue",
+            "pour vous": "catalogue",
             "favoris": "favoris",
             "filtres": "filtres",
             "vendre": "vendre",
@@ -164,32 +173,41 @@ class MainWindow(QMainWindow):
                 self.sidebar.btns[label].clicked.connect(
                     lambda checked, p=page: self._nav_et_fermer(p)
                 )
+        if "messagerie" in self.sidebar.btns:
+            self.sidebar.btns["messagerie"].clicked.connect(self._messagerie_indispo)
 
     def _nav(self, page_name):
         page = self._get_page(page_name)
         self.stack.setCurrentWidget(page)
 
+    def _ouvrir_article(self, article):
+        page = self._get_page("article_detail")
+        page.set_article(article)
+        self.stack.setCurrentWidget(page)
+
+    def _ouvrir_vendeur(self, utilisateur):
+        page = self._get_page("vendeur_profil")
+        page.set_vendeur(utilisateur)
+        self.stack.setCurrentWidget(page)
+
     def _nav_et_fermer(self, page_name):
         self._nav(page_name)
         self.sidebar.hide()
+        self.overlay.hide()  # ← ajoute ça
 
     def _toggle_sidebar(self):
         if self.sidebar.isVisible():
             self.sidebar.hide()
+            self.overlay.hide()
         else:
             h = self.height() - self.topbar.height()
             self.sidebar.setGeometry(0, self.topbar.height(), 210, h)
+            self.overlay.setGeometry(210, self.topbar.height(),
+                                     self.width() - 210, h)
+            self.overlay.show()
+            self.overlay.raise_()
             self.sidebar.show()
             self.sidebar.raise_()
-
-    def _ouvrir_article(self, article):
-        page = self._get_page("article_detail")
-        page.set_article(article)
-        self._nav("article_detail")
-
-    def _ouvrir_vendeur(self, utilisateur):
-        self.pages["vendeur_profil"].set_vendeur(utilisateur)
-        self._nav("vendeur_profil")
 
     def _appliquer_filtres(self, filtres):
         """Applique les filtres sur le catalogue et navigue vers lui."""
@@ -204,6 +222,11 @@ class MainWindow(QMainWindow):
         catalogue.appliquer_filtres(catalogue.articles)
         self._nav("catalogue")
 
+    def _messagerie_indispo(self):
+        from PyQt5.QtWidgets import QMessageBox
+        QMessageBox.information(self, "Messagerie", "La messagerie n'est pas encore disponible.")
+        self._toggle_sidebar()
+
     def mousePressEvent(self, event):
         if self.sidebar.isVisible():
             if not self.sidebar.geometry().contains(event.pos()):
@@ -215,3 +238,4 @@ class MainWindow(QMainWindow):
         if self.sidebar.isVisible():
             h = self.height() - self.topbar.height()
             self.sidebar.setGeometry(0, self.topbar.height(), 210, h)
+

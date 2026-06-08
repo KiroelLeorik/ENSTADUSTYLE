@@ -16,6 +16,28 @@ BORDER_COLOR = "#1a1a44"
 GOLD_COLOR = "#ffcc00"
 
 
+def popup_style():
+    return f"""
+        QMessageBox, QInputDialog {{
+            background-color: {MUTED_COLOR};
+        }}
+        QMessageBox QLabel, QInputDialog QLabel {{
+            color: {WHITE}; font-size: 13px;
+        }}
+        QMessageBox QPushButton, QInputDialog QPushButton {{
+            background-color: {ACCENT_COLOR}; color: {WHITE};
+            border: none; border-radius: 4px;
+            padding: 6px 18px; font-size: 12px; font-weight: bold;
+        }}
+        QMessageBox QPushButton:hover, QInputDialog QPushButton:hover {{
+            background-color: {ACCENT_HOVER};
+        }}
+        QInputDialog QLineEdit, QInputDialog QDoubleSpinBox {{
+            background-color: {BG_COLOR}; color: {WHITE};
+            border: 1px solid {BORDER_COLOR}; border-radius: 4px; padding: 4px 8px;
+        }}
+    """
+
 def btn_accent_style():
     return f"""
         QPushButton {{
@@ -112,3 +134,25 @@ def icon_btn_style():
 
 def photo_placeholder_style():
     return f"background-color: #0a0a30; color: {DIM_COLOR}; font-size: 40px; border-radius: 4px;"
+
+
+def charger_pixmap(chemin, largeur, hauteur):
+    """Charge et scale une image. Retourne None si chemin invalide ou fichier absent."""
+    import os
+    from PyQt5.QtGui import QPixmap
+    from PyQt5.QtCore import Qt
+    if not chemin:
+        return None
+    candidats = []
+    if os.path.isabs(chemin):
+        candidats.append(chemin)
+    else:
+        BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        candidats.append(os.path.join(BASE_DIR, chemin))
+        candidats.append(os.path.join(os.getcwd(), chemin))
+    for c in candidats:
+        if os.path.exists(c):
+            pix = QPixmap(c)
+            if not pix.isNull():
+                return pix.scaled(largeur, hauteur, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+    return None

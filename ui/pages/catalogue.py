@@ -1,11 +1,27 @@
 """----------- Author : LARDILLIER Léo / GREGOIRE Louna -------------"""
 
+import os
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                               QPushButton, QFrame)
 from PyQt5.QtCore import Qt, pyqtSignal
 from ui.styles import *
 
 ARTICLES_PAR_PAGE = 4
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+
+def _pix_absolu(chemin, largeur, hauteur):
+    from PyQt5.QtGui import QPixmap
+    from PyQt5.QtCore import Qt
+    if not chemin:
+        return None
+    absolu = chemin if os.path.isabs(chemin) else os.path.join(BASE_DIR, chemin)
+    if not os.path.exists(absolu):
+        return None
+    pix = QPixmap(absolu)
+    if pix.isNull():
+        return None
+    return pix.scaled(largeur, hauteur, Qt.KeepAspectRatio, Qt.SmoothTransformation)
 
 
 class CarteArticle(QFrame):
@@ -26,11 +42,15 @@ class CarteArticle(QFrame):
         layout.setContentsMargins(0, 0, 0, 10)
         layout.setSpacing(6)
 
-        # Photo placeholder
-        photo = QLabel("📷")
-        photo.setFixedHeight(170)
+        photo = QLabel()
+        photo.setFixedSize(185, 170)
         photo.setAlignment(Qt.AlignCenter)
-        photo.setStyleSheet(photo_placeholder_style())
+        pix = _pix_absolu(getattr(self.article, 'photo', None), 185, 170)
+        if pix:
+            photo.setPixmap(pix)
+        else:
+            photo.setText("📷")
+            photo.setStyleSheet(photo_placeholder_style())
         layout.addWidget(photo)
 
         # Nom article
@@ -97,12 +117,15 @@ class CataloguePage(QWidget):
 
     def _charger_articles(self):
         from services.recommendation import recommander
-        acheteur = self.plateforme.en_tant_que_acheteur(self.plateforme.utilisateur_courant) #On charge l'acheteur
-        if acheteur.favoris:
-            resultat = recommander(acheteur, self.plateforme.articles, 50) #Si il a des favoris on recommande en fonction
-            self.articles = [a[0] for a in resultat]
+        if not self.plateforme.utilisateur_courant:
+            self.articles = [a for a in self.plateforme.articles if not a.vendu]
         else:
-            self.articles = [a for a in self.plateforme.articles if not a.vendu] #Sinon on recommande tous les articles non vendus
+            acheteur = self.plateforme.en_tant_que_acheteur(self.plateforme.utilisateur_courant)
+            if acheteur.favoris:
+                resultat = recommander(acheteur, self.plateforme.articles, 50)
+                self.articles = [a[0] for a in resultat]
+            else:
+                self.articles = [a for a in self.plateforme.articles if not a.vendu]
         self.page_courante = 0
         self._afficher_page()
 

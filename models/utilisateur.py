@@ -10,7 +10,8 @@ class Utilisateur:
 
     def __init__(self, id: int, pseudo: str, nom: str, prenom: str, mail: str,
                  mot_de_passe: str, est_pro: bool, evaluation: float,
-                 localisation: Optional[str], date_inscription: Optional[str]) -> None:
+                 localisation: Optional[str], date_inscription: Optional[str],
+                 photo: Optional[str] = None) -> None:
         """
         :param id: identifiant unique de l'utilisateur en base de données
         :param pseudo: nom d'utilisateur public
@@ -22,6 +23,7 @@ class Utilisateur:
         :param evaluation: note moyenne attribuée par la communauté (0 à 5)
         :param localisation: ville ou région de l'utilisateur
         :param date_inscription: date d'inscription sur la plateforme
+        :param photo: chemin vers la photo de profil
         """
         self.id = id
         self.pseudo = pseudo
@@ -33,6 +35,7 @@ class Utilisateur:
         self.evaluation = evaluation
         self.localisation = localisation
         self.date_inscription = date_inscription
+        self.photo = photo
 
     @property
     def mot_de_passe(self) -> str:
@@ -67,8 +70,9 @@ class Utilisateur:
             print("Ancien mot de passe incorrect")
             return False
         self.mot_de_passe = nouveau_mdp
+        from db.db import update_mot_de_passe
+        update_mot_de_passe(self.id, self.mot_de_passe)
         return True
-    # Incomplet, manque la persistance BDD
 
     def se_connecter(self, pseudo: str, mdp: str) -> bool:
         """
@@ -112,8 +116,9 @@ class Utilisateur:
         if pseudo is None and mail is None and localisation is None:
             print("Aucune modification effectuée.")
             return False
+        from db.db import update_utilisateur
+        update_utilisateur(self.id, pseudo, mail, localisation)
         return True
-    #Incomplet, manque la persistance BDD
 
     def afficher_profil(self) -> Tuple[str, str, Optional[str]]:
         """
@@ -132,7 +137,8 @@ class Vendeur(Utilisateur):
 
     def __init__(self, id: int, pseudo: str, nom: str, prenom: str, mail: str,
                  mot_de_passe: str, est_pro: bool, evaluation: float,
-                 localisation: Optional[str], date_inscription: Optional[str]) -> None:
+                 localisation: Optional[str], date_inscription: Optional[str],
+                 photo: Optional[str] = None) -> None:
         """
         :param id: identifiant unique de l'utilisateur
         :param pseudo: nom d'utilisateur public
@@ -144,8 +150,9 @@ class Vendeur(Utilisateur):
         :param evaluation: note moyenne attribuée par la communauté (0 à 5)
         :param localisation: ville ou région du vendeur
         :param date_inscription: date d'inscription sur la plateforme
+        :param photo: chemin vers la photo de profil
         """
-        super().__init__(id, pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation, date_inscription)
+        super().__init__(id, pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation, date_inscription, photo)
         self.liste_article = self._charger_articles()
         
     def _charger_articles(self):
@@ -192,11 +199,12 @@ class Vendeur(Utilisateur):
         """
         if article in self.liste_article:
             self.liste_article.remove(article)
+            from db.db import delete_article
+            delete_article(article.id)
             return True
         else:
             print("Cet article n'existe pas")
             return False
-    # Incomplet, manque la persistance BDD
 
     def mes_articles(self) -> Tuple[List, List]:
         """
@@ -222,7 +230,8 @@ class Acheteur(Utilisateur):
 
     def __init__(self, id: int, pseudo: str, nom: str, prenom: str, mail: str,
                  mot_de_passe: str, est_pro: bool, evaluation: float,
-                 localisation: Optional[str], date_inscription: Optional[str]) -> None:
+                 localisation: Optional[str], date_inscription: Optional[str],
+                 photo: Optional[str] = None) -> None:
         """
         :param id: identifiant unique de l'utilisateur
         :param pseudo: nom d'utilisateur public
@@ -234,8 +243,9 @@ class Acheteur(Utilisateur):
         :param evaluation: note moyenne attribuée par la communauté (0 à 5)
         :param localisation: ville ou région de l'acheteur
         :param date_inscription: date d'inscription sur la plateforme
+        :param photo: chemin vers la photo de profil
         """
-        super().__init__(id, pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation, date_inscription)
+        super().__init__(id, pseudo, nom, prenom, mail, mot_de_passe, est_pro, evaluation, localisation, date_inscription, photo)
         self.favoris = self._charger_favoris()
 
     def _charger_favoris(self):

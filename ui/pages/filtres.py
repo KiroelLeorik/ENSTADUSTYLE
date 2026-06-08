@@ -1,6 +1,6 @@
 """----------- Author : LARDILLIER Léo / GREGOIRE Louna -------------"""
 
-from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton)
+from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel, QPushButton, QMessageBox)
 from PyQt5.QtCore import Qt, pyqtSignal
 from ui.styles import *
 
@@ -10,9 +10,10 @@ class FiltresPage(QWidget):
 
     filtres_appliques = pyqtSignal(dict)
 
-    def __init__(self, plateforme):
+    def __init__(self, plateforme, utilisateur):
         super().__init__()
         self.plateforme = plateforme
+        self.utilisateur = utilisateur
         self.filtres_actifs = {}
         self.setStyleSheet(f"background-color: {BG_COLOR};")
         self._init_ui()
@@ -77,12 +78,14 @@ class FiltresPage(QWidget):
         autres_lbl.setStyleSheet(label_white(16) + " font-weight: bold; letter-spacing: 3px;")
         autres_col.addWidget(autres_lbl)
 
-        for label, clé in [("GENRE", "genre"), ("TAILLE", "taille"),
+        for label, cle in [("GENRE", "genre"), ("TAILLE", "taille"),
                             ("COULEUR", "couleur"), ("MARQUE", "marque"),
                             ("ÉTAT", "etat"), ("MATIÈRE", "matiere")]:
-            lbl = QLabel(label)
-            lbl.setStyleSheet(label_white(13) + " letter-spacing: 2px;")
-            autres_col.addWidget(lbl)
+            valeurs = sorted(set(
+                getattr(a, cle) for a in self.plateforme.articles
+                if getattr(a, cle, None)
+            ))
+            self._creer_section_depliable(autres_col, label, cle, valeurs)
 
         autres_col.addStretch()
         cols.addLayout(autres_col)
@@ -104,7 +107,13 @@ class FiltresPage(QWidget):
         btn_reset.clicked.connect(self._reinitialiser)
         btn_row.addWidget(btn_reset)
 
-        layout.addLayout(btn_row)  # ← ajouté au layout !
+        btn_abonner = QPushButton("🔔 S'ABONNER")
+        btn_abonner.setStyleSheet(btn_accent_style())
+        btn_abonner.setFixedWidth(200)
+        btn_abonner.clicked.connect(self._abonner)
+        btn_row.addWidget(btn_abonner)
+
+        layout.addLayout(btn_row)
         layout.addStretch()
 
     def _creer_filtre_btn(self, texte, champ):
@@ -124,6 +133,40 @@ class FiltresPage(QWidget):
         btn.clicked.connect(lambda checked, c=champ, v=texte: self._toggle(c, v, btn))
         return btn
 
+    def _creer_section_depliable(self, parent_layout, label, cle, valeurs):
+        header = QPushButton(f"▶  {label}")
+        header.setStyleSheet(f"""
+            QPushButton {{
+                color: {WHITE}; background: transparent; border: none;
+                font-size: 13px; font-weight: bold; letter-spacing: 2px;
+                text-align: left; padding: 3px 0;
+            }}
+            QPushButton:hover {{ color: {ACCENT_COLOR}; }}
+        """)
+
+        container = QWidget()
+        container.setStyleSheet("background: transparent;")
+        inner = QVBoxLayout(container)
+        inner.setContentsMargins(12, 0, 0, 0)
+        inner.setSpacing(8)
+        container.hide()
+
+        for valeur in valeurs:
+            btn = self._creer_filtre_btn(valeur, cle)
+            inner.addWidget(btn)
+
+        def toggle():
+            if container.isHidden():
+                container.show()
+                header.setText(f"▼  {label}")
+            else:
+                container.hide()
+                header.setText(f"▶  {label}")
+
+        header.clicked.connect(toggle)
+        parent_layout.addWidget(header)
+        parent_layout.addWidget(container)
+
     def _toggle(self, champ, valeur, btn):
         if champ in self.filtres_actifs and self.filtres_actifs[champ] == valeur:
             del self.filtres_actifs[champ]
@@ -133,8 +176,21 @@ class FiltresPage(QWidget):
 
 
     def _appliquer(self):
-        self.filtres_appliques.emit(self.filtres_actifs)  #seulement quand on clique Appliquer
+        self.filtres_appliques.emit(self.filtres_actifs)
 
     def _reinitialiser(self):
         self.filtres_actifs = {}
         self.filtres_appliques.emit({})
+
+    def _abonner(self):
+        if not self.filtres_actifs:
+            QMessageBox.warning(self, "Abonnement", "Sélectionnez au moins un critère avant de vous abonner.")
+            return
+        from services.observer import Observateur
+        acheteur = self.plateforme.en_tant_que_acheteur(self.utilisateur)
+        observateur = Observateur(acheteur, dict(self.filtres_actifs), plateforme=self.plateforme)
+        if self.plateforme.abonner(observateur):
+            QMessageBox.information(self, "Abonnement",
+                "Abonnement créé !\nVous serez notifié dès qu'un article correspondant est publié.")
+        else:
+            QMessageBox.warning(self, "Abonnement", "Vous êtes déjà abonné à ces critères exactement.")

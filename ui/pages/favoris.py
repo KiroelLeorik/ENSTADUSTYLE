@@ -64,10 +64,15 @@ class FavorisPage(QWidget):
             fl.setSpacing(5)
 
             # Photo
-            photo = QLabel("📷")
+            photo = QLabel()
             photo.setFixedHeight(165)
             photo.setAlignment(Qt.AlignCenter)
-            photo.setStyleSheet(photo_placeholder_style())
+            pix = charger_pixmap(getattr(article, 'photo', None), 185, 165)
+            if pix:
+                photo.setPixmap(pix)
+            else:
+                photo.setText("📷")
+                photo.setStyleSheet(photo_placeholder_style())
             fl.addWidget(photo)
 
             # Nom

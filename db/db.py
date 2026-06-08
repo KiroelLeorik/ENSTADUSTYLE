@@ -163,6 +163,63 @@ if __name__ == "__main__":
     print(get_utilisateur_by_id(1))
     print(get_article_by_id(1))
 
+def delete_article(id_objet: int) -> None:
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('DELETE FROM Objets WHERE id_objet = ?', (id_objet,))
+    conn.commit()
+    conn.close()
+
+def update_utilisateur(id: int, pseudo: str = None, mail: str = None,
+                       localisation: str = None) -> None:
+    conn = get_connection()
+    c = conn.cursor()
+    if pseudo is not None:
+        c.execute('UPDATE Utilisateurs SET pseudo = ? WHERE id_utilisateur = ?', (pseudo, id))
+    if mail is not None:
+        c.execute('UPDATE Utilisateurs SET mail = ? WHERE id_utilisateur = ?', (mail, id))
+    if localisation is not None:
+        c.execute('UPDATE Utilisateurs SET localisation = ? WHERE id_utilisateur = ?', (localisation, id))
+    conn.commit()
+    conn.close()
+
+def update_mot_de_passe(id: int, nouveau_mdp: str) -> None:
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('UPDATE Utilisateurs SET mot_de_passe = ? WHERE id_utilisateur = ?', (nouveau_mdp, id))
+    conn.commit()
+    conn.close()
+
+def update_article(id_objet: int, nom: str, description: str, prix_vendeur: float,
+                   prix_min: float, etat: str, sous_categorie: str = None,
+                   genre: str = None, taille: str = None, couleur: str = None,
+                   marque: str = None, matiere: str = None, photo: str = None) -> None:
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('''UPDATE Objets SET nom=?, description=?, prix_vendeur=?, prix_min=?,
+                 etat=?, sous_categorie=?, genre=?, taille=?, couleur=?, marque=?, matiere=?,
+                 photo=? WHERE id_objet=?''',
+              (nom, description, prix_vendeur, prix_min, etat, sous_categorie,
+               genre, taille, couleur, marque, matiere, photo, id_objet))
+    conn.commit()
+    conn.close()
+
+def migrer_photo_utilisateur() -> None:
+    conn = get_connection()
+    c = conn.cursor()
+    cols = [r[1] for r in c.execute("PRAGMA table_info(Utilisateurs)").fetchall()]
+    if "photo" not in cols:
+        c.execute("ALTER TABLE Utilisateurs ADD COLUMN photo TEXT")
+        conn.commit()
+    conn.close()
+
+def update_utilisateur_photo(id: int, photo: str) -> None:
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('UPDATE Utilisateurs SET photo = ? WHERE id_utilisateur = ?', (photo, id))
+    conn.commit()
+    conn.close()
+
 def insert_favori(id_utilisateur, id_objet):
     conn = get_connection()
     c = conn.cursor()
@@ -225,7 +282,6 @@ def get_abonnements_notif(id_acheteur):
     return resultat_json
 
 def get_nb_abonnes(id_utilisateur):
-    """Retourne le nombre de personnes qui suivent cet utilisateur."""
     conn = get_connection()
     c = conn.cursor()
     c.execute('SELECT COUNT(*) FROM Abonnements WHERE id_suivi = ?', (id_utilisateur,))
@@ -234,11 +290,32 @@ def get_nb_abonnes(id_utilisateur):
     return result
 
 def get_nb_abonnements(id_utilisateur):
-    """Retourne le nombre de personnes que cet utilisateur suit."""
     conn = get_connection()
     c = conn.cursor()
     c.execute('SELECT COUNT(*) FROM Abonnements WHERE id_abonne = ?', (id_utilisateur,))
     result = c.fetchone()[0]
+    conn.close()
+    return result
+
+def insert_abonnement(id_abonne: int, id_suivi: int) -> None:
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('INSERT OR IGNORE INTO Abonnements (id_abonne, id_suivi) VALUES (?, ?)', (id_abonne, id_suivi))
+    conn.commit()
+    conn.close()
+
+def delete_abonnement(id_abonne: int, id_suivi: int) -> None:
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('DELETE FROM Abonnements WHERE id_abonne = ? AND id_suivi = ?', (id_abonne, id_suivi))
+    conn.commit()
+    conn.close()
+
+def is_abonne(id_abonne: int, id_suivi: int) -> bool:
+    conn = get_connection()
+    c = conn.cursor()
+    c.execute('SELECT 1 FROM Abonnements WHERE id_abonne = ? AND id_suivi = ?', (id_abonne, id_suivi))
+    result = c.fetchone() is not None
     conn.close()
     return result
 

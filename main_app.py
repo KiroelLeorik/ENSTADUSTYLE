@@ -21,6 +21,8 @@ if __name__ == "__main__":
 
     app = QApplication(sys.argv)
     app.setStyle("Fusion")
+    from ui.styles import popup_style
+    app.setStyleSheet(popup_style())
 
     # Fenêtre de login
     from ui.login_window import LoginWindow

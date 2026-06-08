@@ -1,10 +1,14 @@
 """----------- Author : LARDILLIER Léo / GREGOIRE Louna -------------"""
 
+import os, shutil
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                               QPushButton, QLineEdit, QTextEdit, QComboBox,
-                              QFrame, QGridLayout, QMessageBox)
+                              QFrame, QGridLayout, QMessageBox, QFileDialog)
 from PyQt5.QtCore import Qt
 from ui.styles import *
+
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+PHOTOS_DIR = os.path.join(BASE_DIR, "assets", "photos")
 
 
 class VendrePage(QWidget):
@@ -14,6 +18,7 @@ class VendrePage(QWidget):
         super().__init__()
         self.plateforme = plateforme
         self.utilisateur = utilisateur
+        self.photo_path = None
         self.setStyleSheet(f"background-color: {BG_COLOR};")
         self._init_ui()
 
@@ -38,23 +43,25 @@ class VendrePage(QWidget):
         photo_main.setFixedSize(180, 190)
         photo_main.setStyleSheet(f"background-color: {MUTED_COLOR}; border-radius: 4px;")
         pm_layout = QVBoxLayout(photo_main)
-        cam = QLabel("📷")
-        cam.setAlignment(Qt.AlignCenter)
-        cam.setStyleSheet("font-size: 60px; background: transparent;")
-        pm_layout.addWidget(cam)
+        pm_layout.setContentsMargins(0, 0, 0, 0)
+        self.photo_label = QLabel("📷")
+        self.photo_label.setAlignment(Qt.AlignCenter)
+        self.photo_label.setStyleSheet("font-size: 60px; background: transparent;")
+        self.photo_label.setFixedSize(180, 190)
+        pm_layout.addWidget(self.photo_label)
         photo_col.addWidget(photo_main)
 
-        for _ in range(2):
-            btn_plus = QPushButton("+")
-            btn_plus.setFixedSize(180, 45)
-            btn_plus.setStyleSheet(f"""
-                QPushButton {{
-                    background-color: {MUTED_COLOR}; color: {WHITE};
-                    border: none; font-size: 22px; border-radius: 4px;
-                }}
-                QPushButton:hover {{ background-color: {ACCENT_COLOR}; color: {BG_COLOR}; }}
-            """)
-            photo_col.addWidget(btn_plus)
+        btn_choisir = QPushButton("+ Ajouter une photo")
+        btn_choisir.setFixedSize(180, 45)
+        btn_choisir.setStyleSheet(f"""
+            QPushButton {{
+                background-color: {MUTED_COLOR}; color: {WHITE};
+                border: none; font-size: 13px; border-radius: 4px;
+            }}
+            QPushButton:hover {{ background-color: {ACCENT_COLOR}; color: {BG_COLOR}; }}
+        """)
+        btn_choisir.clicked.connect(self._choisir_photo)
+        photo_col.addWidget(btn_choisir)
 
         body.addLayout(photo_col)
 
@@ -127,6 +134,25 @@ class VendrePage(QWidget):
         btn_vendre.clicked.connect(self._publier)
         layout.addWidget(btn_vendre, alignment=Qt.AlignRight)
 
+    def _choisir_photo(self):
+        path, _ = QFileDialog.getOpenFileName(
+            self, "Choisir une photo", "", "Images (*.png *.jpg *.jpeg *.webp)"
+        )
+        if not path:
+            return
+        os.makedirs(PHOTOS_DIR, exist_ok=True)
+        filename = os.path.basename(path)
+        dest = os.path.join(PHOTOS_DIR, filename)
+        shutil.copy2(path, dest)
+        self.photo_path = f"assets/photos/{filename}"
+        from PyQt5.QtGui import QPixmap
+        from PyQt5.QtCore import Qt
+        pix = QPixmap(dest).scaled(180, 190, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+        if not pix.isNull():
+            self.photo_label.setPixmap(pix)
+            self.photo_label.setText("")
+            self.photo_label.setStyleSheet("")
+
     def _publier(self):
         from models.article import Vetement
         nom = self.input_titre.text().strip()
@@ -151,7 +177,7 @@ class VendrePage(QWidget):
             etat=self.combo_etat.currentText(),
             id_vendeur=self.utilisateur.id,
             date_publication=None,
-            photo="default.jpg",
+            photo=self.photo_path,
             vendu=0,
             sous_categorie=self.input_sous_cat.text(),
             genre=self.inputs["genre"].text(),
@@ -178,3 +204,7 @@ class VendrePage(QWidget):
         self.input_sous_cat.clear()
         for inp in self.inputs.values():
             inp.clear()
+        self.photo_path = None
+        self.photo_label.clear()
+        self.photo_label.setText("📷")
+        self.photo_label.setStyleSheet("font-size: 60px; background: transparent;")
