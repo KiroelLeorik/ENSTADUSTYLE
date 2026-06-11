@@ -159,6 +159,7 @@ class MainWindow(QMainWindow):
             self.pages["notifications"].article_clique.connect(self._ouvrir_article)
         elif nom == "vendeur_profil":
             self.pages["vendeur_profil"].retour.connect(lambda: self._nav("article_detail"))
+            self.pages["vendeur_profil"].article_clique.connect(self._ouvrir_article)
 
     def _connecter_sidebar(self):
         mapping = {
@@ -223,6 +224,7 @@ class MainWindow(QMainWindow):
         self._nav("catalogue")
 
     def _messagerie_indispo(self):
+        """Affiche un message indiquant que la messagerie n'est pas encore disponible."""
         from PyQt5.QtWidgets import QMessageBox
         QMessageBox.information(self, "Messagerie", "La messagerie n'est pas encore disponible.")
         self._toggle_sidebar()

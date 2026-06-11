@@ -137,22 +137,22 @@ class CataloguePage(QWidget):
         self._afficher_page()
 
     def _afficher_page(self):
-        # Vider
         for i in reversed(range(self.zone_cartes.count())):
             w = self.zone_cartes.itemAt(i).widget()
             if w:
                 w.setParent(None)
 
+        dispo = [a for a in self.articles if not a.vendu]
         start = self.page_courante * ARTICLES_PAR_PAGE
-        end = min(start + ARTICLES_PAR_PAGE, len(self.articles))
+        end = min(start + ARTICLES_PAR_PAGE, len(dispo))
 
-        for article in self.articles[start:end]:
+        for article in dispo[start:end]:
             carte = CarteArticle(article)
             carte.clique.connect(self.article_clique.emit)
             self.zone_cartes.addWidget(carte)
 
         self.btn_prev.setEnabled(self.page_courante > 0)
-        self.btn_next.setEnabled(end < len(self.articles))
+        self.btn_next.setEnabled(end < len(dispo))
 
     def _precedent(self):
         if self.page_courante > 0:

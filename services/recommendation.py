@@ -1,10 +1,16 @@
+""" ----------- Author : GREGOIRE Louna ------------- """
+
 
 def recommander(acheteur, tous_les_articles, n=5):
     """
-    :param acheteur: objet Acheteur avec ses favoris
-    :param tous_les_articles: liste de tous les articles disponibles
-    :param n: nombre de recommandations à retourner
-    :return: liste des n articles les plus recommandés
+    Recommande des articles à un acheteur en fonction de ses favoris.
+    Construit un profil de préférences (catégorie, taille, couleur…) à partir des favoris
+    et score chaque article disponible selon sa correspondance avec ce profil.
+
+    :param acheteur: objet Acheteur avec ses favoris chargés
+    :param tous_les_articles: liste de tous les articles de la plateforme
+    :param n: nombre maximum de recommandations à retourner (défaut : 5)
+    :return: liste de tuples (article, score) triés par pertinence décroissante
     """
     #Construction du profil
     categorie = {}

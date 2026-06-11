@@ -152,6 +152,7 @@ class ArticleDetailPage(QWidget):
             self.vendeur_clique.emit(self._vendeur)
 
     def _toggle_favori(self):
+        """Ajoute ou retire l'article des favoris de l'utilisateur connecté et met à jour le bouton."""
         if not self.article:
             return
         acheteur = self.plateforme.en_tant_que_acheteur(self.utilisateur)

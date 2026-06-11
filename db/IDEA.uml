@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>9f0361ba-c720-4e78-86ba-e4775f8acf1a</OriginalElement>
+  <nodes>
+    <node x="-131.0" y="436.0">9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.Objets</node>
+    <node x="145.0" y="592.0">9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.Abonnements_notifications</node>
+    <node x="26.5" y="984.0">9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.Transactions</node>
+    <node x="243.0" y="1240.5">9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.sqlite_master</node>
+    <node x="190.0" y="-100.0">9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.Utilisateurs</node>
+    <node x="310.5" y="-223.5">9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.sqlite_sequence</node>
+    <node x="-128.0" y="1252.0">9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.Favoris</node>
+    <node x="343.5" y="272.0">9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.Abonnements</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.Abonnements" target="9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.Utilisateurs" relationship="REFERENCES">
+      <point x="-46.25" y="-68.0" />
+      <point x="389.75" y="240.0" />
+      <point x="310.4" y="240.0" />
+      <point x="34.400000000000006" y="140.0" />
+    </edge>
+    <edge source="9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.Transactions" target="9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.Utilisateurs" relationship="REFERENCES">
+      <point x="59.66666666666667" y="-116.0" />
+      <point x="175.66666666666669" y="940.0" />
+      <point x="116.0" y="940.0" />
+      <point x="116.0" y="580.0" />
+      <point x="276.0" y="580.0" />
+      <point x="0.0" y="140.0" />
+    </edge>
+    <edge source="9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.Transactions" target="9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.Objets" relationship="REFERENCES">
+      <point x="-59.666666666666686" y="-116.0" />
+      <point x="56.333333333333314" y="960.0" />
+      <point x="-4.0" y="960.0" />
+      <point x="-4.0" y="920.0" />
+      <point x="-44.0" y="920.0" />
+      <point x="0.0" y="224.0" />
+    </edge>
+    <edge source="9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.Favoris" target="9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.Objets" relationship="REFERENCES">
+      <point x="42.0" y="-68.0" />
+      <point x="-2.0" y="960.0" />
+      <point x="-4.0" y="960.0" />
+      <point x="-4.0" y="920.0" />
+      <point x="-44.0" y="920.0" />
+      <point x="0.0" y="224.0" />
+    </edge>
+    <edge source="9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.Abonnements_notifications" target="9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.Utilisateurs" relationship="REFERENCES">
+      <point x="0.0" y="-68.0" />
+      <point x="0.0" y="140.0" />
+    </edge>
+    <edge source="9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.Favoris" target="9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.Utilisateurs" relationship="REFERENCES">
+      <point x="-42.0" y="-68.0" />
+      <point x="-86.0" y="1220.0" />
+      <point x="-164.0" y="1220.0" />
+      <point x="-164.0" y="380.0" />
+      <point x="207.2" y="380.0" />
+      <point x="-68.8" y="140.0" />
+    </edge>
+    <edge source="9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.Objets" target="9f0361ba-c720-4e78-86ba-e4775f8acf1a.TABLE:main.Utilisateurs" relationship="REFERENCES">
+      <point x="0.0" y="-224.0" />
+      <point x="-44.0" y="400.0" />
+      <point x="76.0" y="400.0" />
+      <point x="76.0" y="200.0" />
+      <point x="241.60000000000002" y="200.0" />
+      <point x="-34.400000000000006" y="140.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.327007299270073" showDependencies="false" x="161.9196428571429" y="433.47767857142867" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Columns</Category>
+    <Category>Comments</Category>
+    <Category>Key columns</Category>
+  </Categories>
+</Diagram>
+

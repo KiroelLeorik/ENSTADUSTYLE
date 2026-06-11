@@ -134,6 +134,7 @@ class EditArticleDialog(QDialog):
         layout.addLayout(btn_row)
 
     def _maj_photo_preview(self):
+        """Affiche la photo actuelle de l'article (ou l'icône 📷 si aucune) dans l'aperçu."""
         chemin = self.nouvelle_photo or getattr(self.article, 'photo', None)
         pix = _pix_absolu(chemin, 120, 120)
         if pix:
@@ -145,6 +146,7 @@ class EditArticleDialog(QDialog):
             self.photo_label.setStyleSheet(photo_placeholder_style() + " font-size: 30px;")
 
     def _choisir_photo(self):
+        """Ouvre un sélecteur de fichier, copie l'image choisie dans assets/photos/ et met à jour l'aperçu."""
         path, _ = QFileDialog.getOpenFileName(
             self, "Choisir une photo", "", "Images (*.png *.jpg *.jpeg *.webp)"
         )

@@ -1,3 +1,5 @@
+"""Tests unitaires pour Transaction, Plateforme, Matching et Recherche — Author : LARDILLIER Léo / GREGOIRE Louna"""
+
 import unittest
 from models.utilisateur import Utilisateur, Vendeur, Acheteur
 from models.article import Article, Vetement
@@ -48,6 +50,11 @@ class TestPlateforme(unittest.TestCase):
     def setUp(self):
         """Initialise une plateforme et des objets de test."""
         self.p = Plateforme()
+        # Simule un utilisateur connecté pour lever le @need_auth
+        self.p.utilisateur_courant = Utilisateur(
+            1, "alice92", "Martin", "Alice", "alice@mail.com",
+            "hash1", 0, 4.8, "Paris", "2026-01-01"
+        )
         self.article = Vetement(1, "Veste en jean", "Belle veste", "Vêtements",
                                 35.0, 25.0, "bon", 1, "2026-04-10", "veste.jpg", 0,
                                 "Vestes", "Femme", "M", "Bleu", "Levi's", "Denim")

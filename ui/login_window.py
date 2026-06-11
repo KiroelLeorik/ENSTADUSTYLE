@@ -1,3 +1,5 @@
+"""----------- Author : LARDILLIER Léo -------------"""
+
 from PyQt5.QtWidgets import (QWidget, QVBoxLayout, QLabel,
                               QLineEdit, QPushButton, QCheckBox)
 from PyQt5.QtCore import Qt

@@ -50,6 +50,13 @@ class Plateforme(Observable):
 
 
     def authentifier_utilisateur(self, log, password):
+        """
+        Vérifie les identifiants et connecte l'utilisateur si valides.
+
+        :param log: pseudo saisi par l'utilisateur
+        :param password: mot de passe saisi
+        :return: instance Utilisateur connecté, ou None si identifiants incorrects
+        """
         for user in self.utilisateurs:
             if log == user.pseudo:
                 if password == user.mot_de_passe:
@@ -61,6 +68,7 @@ class Plateforme(Observable):
         return None
 
     def need_auth(func):
+        """Décorateur : bloque l'appel si aucun utilisateur n'est connecté."""
         def wrapper(self, *args, **kwargs):
             if self.utilisateur_courant is None:
                 print("Vous devez être connecté !")
@@ -70,6 +78,7 @@ class Plateforme(Observable):
 
     @need_auth
     def deconnecter_utilisateur(self):
+        """Déconnecte l'utilisateur courant et réinitialise la session."""
         self.utilisateur_courant = None
         return("Vous êtes déconnecté.")
 
@@ -118,6 +127,12 @@ class Plateforme(Observable):
         return None
 
     def trouver_utilisateur_id(self, id):
+        """
+        Recherche un utilisateur par son identifiant numérique.
+
+        :param id: identifiant unique de l'utilisateur
+        :return: instance Utilisateur si trouvé, None sinon
+        """
         for user in self.utilisateurs:
             if id == user.id:
                 return user

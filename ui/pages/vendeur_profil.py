@@ -28,6 +28,7 @@ class VendeurProfilPage(QWidget):
     """Page profil d'un vendeur, accessible depuis la fiche article."""
 
     retour = pyqtSignal()
+    article_clique = pyqtSignal(object)
 
     def __init__(self, plateforme, utilisateur):
         super().__init__()
@@ -179,6 +180,7 @@ class VendeurProfilPage(QWidget):
         self._afficher_articles()
 
     def _maj_btn_suivre(self):
+        """Met à jour le libellé du bouton Suivre selon l'état d'abonnement actuel."""
         from db.db import is_abonne
         if is_abonne(self.utilisateur.id, self.vendeur_user.id):
             self.btn_suivre.setText("NE PLUS SUIVRE")
@@ -186,6 +188,7 @@ class VendeurProfilPage(QWidget):
             self.btn_suivre.setText("SUIVRE")
 
     def _toggle_abonnement(self):
+        """Bascule l'abonnement social entre l'utilisateur connecté et ce vendeur."""
         from db.db import is_abonne, insert_abonnement, delete_abonnement
         if is_abonne(self.utilisateur.id, self.vendeur_user.id):
             delete_abonnement(self.utilisateur.id, self.vendeur_user.id)
@@ -207,6 +210,8 @@ class VendeurProfilPage(QWidget):
             frame = QFrame()
             frame.setFixedSize(185, 210)
             frame.setStyleSheet(f"background-color: {MUTED_COLOR}; border-radius: 4px;")
+            frame.setCursor(Qt.PointingHandCursor)
+            frame.mousePressEvent = lambda e, a=article: self.article_clique.emit(a)
             fl = QVBoxLayout(frame)
             fl.setContentsMargins(0, 0, 0, 8)
             fl.setSpacing(4)
