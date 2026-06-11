@@ -384,13 +384,9 @@ class ProfilPage(QWidget):
             stats.addLayout(col)
         left.addLayout(stats)
 
-        for texte, slot in [("MODIFIER LE PROFIL", self._ouvrir_edition_profil),
-                             ("PORTE MONNAIE", None),
-                             ("MES ANNONCES", None)]:
-            btn = self._btn_texte(texte)
-            if slot:
-                btn.clicked.connect(slot)
-            left.addWidget(btn)
+        btn_modifier = self._btn_texte("MODIFIER LE PROFIL")
+        btn_modifier.clicked.connect(self._ouvrir_edition_profil)
+        left.addWidget(btn_modifier)
 
         left.addStretch()
         self.layout_principal.addLayout(left)
